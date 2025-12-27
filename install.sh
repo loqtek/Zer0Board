@@ -724,8 +724,15 @@ main() {
             INSTALL_DIR="$clone_dir"
             
             if [ -d "$INSTALL_DIR" ]; then
-                print_error "Directory $INSTALL_DIR already exists!"
-                exit 1
+                print_warning "Directory $INSTALL_DIR already exists!"
+                if prompt_yes_no "Remove existing directory and continue with installation?" "n"; then
+                    print_info "Removing existing directory..."
+                    rm -rf "$INSTALL_DIR"
+                    print_success "Directory removed"
+                else
+                    print_error "Installation cancelled. Please choose a different directory or remove the existing one manually."
+                    exit 1
+                fi
             fi
             
             print_info "Cloning repository..."
