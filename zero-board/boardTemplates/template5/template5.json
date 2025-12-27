@@ -1,0 +1,131 @@
+{
+  "title": "Finance Dashboard",
+  "description": "Monitor markets with stock prices, crypto, news, and time. Perfect for traders and finance enthusiasts.",
+  "layout_config": {
+    "pages": [
+      {
+        "id": "page-1",
+        "name": "Page 1",
+        "order": 0,
+        "settings": {
+          "use_global_settings": true
+        }
+      }
+    ],
+    "fullscreen": true
+  },
+  "settings": {
+    "background_type": "youtube",
+    "background_source": "TfWotiyXGfI",
+    "background_config": {
+      "muted": false,
+      "volume": 30
+    },
+    "background_preset": null,
+    "resolution_width": 1920,
+    "resolution_height": 1080,
+    "aspect_ratio": "16:9",
+    "orientation": "landscape",
+    "auto_rotate_pages": false,
+    "lockout_mode": false
+  },
+  "widgets": [
+    {
+      "type": "clock",
+      "config": {
+        "themeType": "clear",
+        "hourFormat": "24",
+        "showSeconds": true,
+        "textColor": "#00ff88"
+      },
+      "position": {
+        "x": 0,
+        "y": 10,
+        "w": 10,
+        "h": 6,
+        "page_id": "page-1"
+      }
+    },
+    {
+      "type": "crypto",
+      "config": {
+        "themeType": "clear",
+        "symbols": [
+          "BTC",
+          "ETH",
+          "BNB"
+        ],
+        "apiKey": "T7HED9UQ2DLI1SB4",
+        "textAlign": "center",
+        "template": "detailed",
+        "symbol": "MSFT",
+        "refreshInterval": 300
+      },
+      "position": {
+        "x": 12,
+        "y": 0,
+        "w": 12,
+        "h": 10,
+        "page_id": "page-1"
+      }
+    },
+    {
+      "type": "news",
+      "config": {
+        "headlines": [],
+        "useCustomHeadlines": false,
+        "rssFeedIds": [],
+        "themeType": "clear",
+        "displayStyle": "list",
+        "descriptionLength": 400,
+        "fontSize": 23,
+        "fontWeight": "600"
+      },
+      "position": {
+        "x": 0,
+        "y": 16,
+        "w": 10,
+        "h": 11,
+        "page_id": "page-1"
+      }
+    },
+    {
+      "type": "stock",
+      "config": {
+        "themeType": "clear",
+        "symbols": [
+          "AAPL",
+          "GOOGL",
+          "MSFT"
+        ],
+        "apiKey": "T7HED9UQ2DLI1SB4",
+        "template": "detailed",
+        "textAlign": "center",
+        "refreshInterval": 300,
+        "fontWeight": "normal"
+      },
+      "position": {
+        "x": 0,
+        "y": 0,
+        "w": 12,
+        "h": 10,
+        "page_id": "page-1"
+      }
+    },
+    {
+      "type": "tradingview",
+      "config": {
+        "themeType": "clear",
+        "widget_url": "",
+        "theme": "dark"
+      },
+      "position": {
+        "x": 10,
+        "y": 10,
+        "w": 14,
+        "h": 17,
+        "page_id": "page-1"
+      }
+    }
+  ]
+}

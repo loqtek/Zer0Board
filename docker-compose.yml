@@ -1,0 +1,164 @@
+version: '3.8'
+
+# ============================================================================
+# Zero Board - Docker Compose Configuration
+# ============================================================================
+# This file uses environment variables from a .env file.
+# 
+# Quick Start:
+#   1. Copy .env.sample to .env:
+#      cp .env.sample .env
+#   2. Edit .env with your configuration values
+#   3. Run: docker-compose up
+#
+# Database Options:
+#   - SQLite (default, simplest - no separate service needed)
+#   - PostgreSQL (uncomment postgres service below)
+#   - MySQL (uncomment mysql service below)
+#
+# To use a different database:
+#   1. Uncomment the desired database service below
+#   2. Update DATABASE_TYPE and DATABASE_URL in your .env file
+#   3. Restart: docker-compose down && docker-compose up
+# ============================================================================
+
+services:
+  # --------------------------------------------------------------------------
+  # PostgreSQL Database (Optional - for production-like development)
+  # --------------------------------------------------------------------------
+  # Uncomment this section to use PostgreSQL instead of SQLite
+  # postgres:
+  #   image: postgres:16-alpine
+  #   container_name: zero-board-postgres
+  #   environment:
+  #     POSTGRES_USER: zeroboard
+  #     POSTGRES_PASSWORD: zeroboard_dev_password  # Change in production!
+  #     POSTGRES_DB: zeroboard
+  #   ports:
+  #     - "5432:5432"  # Expose for local database tools
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U zeroboard"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #   networks:
+  #     - zero-board-network
+  #   restart: unless-stopped
+
+  # --------------------------------------------------------------------------
+  # MySQL Database (Optional - for MySQL-specific development)
+  # --------------------------------------------------------------------------
+  # Uncomment this section to use MySQL instead of SQLite
+  # mysql:
+  #   image: mysql:8.0
+  #   container_name: zero-board-mysql
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: root_dev_password  # Change in production!
+  #     MYSQL_DATABASE: zeroboard
+  #     MYSQL_USER: zeroboard
+  #     MYSQL_PASSWORD: zeroboard_dev_password
+  #   ports:
+  #     - "3306:3306"  # Expose for local database tools
+  #   volumes:
+  #     - mysql_data:/var/lib/mysql
+  #   healthcheck:
+  #     test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot_dev_password"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #   networks:
+  #     - zero-board-network
+  #   restart: unless-stopped
+
+  # --------------------------------------------------------------------------
+  # Backend API Service (FastAPI)
+  # --------------------------------------------------------------------------
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: zero-board-backend
+    environment:
+      # Database Configuration (from .env file)
+      DATABASE_TYPE: ${DATABASE_TYPE:-sqlite}
+      DATABASE_URL: ${DATABASE_URL:-sqlite+aiosqlite:///./zeroboard.db}
+      
+      # Application Settings (from .env file)
+      SECRET_KEY: ${SECRET_KEY:-dev-secret-key-change-in-production}
+      ENVIRONMENT: ${ENVIRONMENT:-development}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000,http://localhost:3001}
+      LOG_LEVEL: ${LOG_LEVEL:-DEBUG}
+      PYTHONUNBUFFERED: ${PYTHONUNBUFFERED:-1}
+      
+      # Session Configuration (from .env file)
+      SESSION_COOKIE_SECURE: ${SESSION_COOKIE_SECURE:-false}
+      SESSION_COOKIE_SAMESITE: ${SESSION_COOKIE_SAMESITE:-lax}
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"  # API available at http://localhost:${BACKEND_PORT:-8000}
+    volumes:
+      # Mount source code for hot-reload
+      - ./backend:/app
+      # Persist logs
+      - ./logs:/app/logs
+      # Note: SQLite database (zeroboard.db) will be created automatically in /app/
+      # when mounted via ./backend:/app above
+    # Uncomment depends_on if using PostgreSQL or MySQL:
+    # depends_on:
+    #   postgres:
+    #     condition: service_healthy
+    # OR
+    #   mysql:
+    #     condition: service_healthy
+    networks:
+      - zero-board-network
+    restart: unless-stopped
+
+  # --------------------------------------------------------------------------
+  # Frontend Service (Next.js)
+  # --------------------------------------------------------------------------
+  frontend:
+    build:
+      context: ./zero-board
+      dockerfile: Dockerfile
+      args:
+        # Pass build-time environment variables
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000}
+        NEXT_PUBLIC_API_TIMEOUT: ${NEXT_PUBLIC_API_TIMEOUT:-30000}
+    container_name: zero-board-frontend
+    environment:
+      # Frontend Configuration (from .env file)
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000}
+      NODE_ENV: ${NODE_ENV:-production}
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"  # Frontend available at http://localhost:${FRONTEND_PORT:-3000}
+    # No volume mounts for production build - code is baked into image
+    # For development with hot-reload, use Dockerfile.dev and uncomment volumes below:
+    # volumes:
+    #   - ./zero-board:/app
+    #   - /app/node_modules
+    #   - /app/.next
+    depends_on:
+      - backend  # Wait for backend to be ready
+    networks:
+      - zero-board-network
+    restart: unless-stopped
+
+# ============================================================================
+# Volumes
+# ============================================================================
+# Persistent storage for database data
+# Uncomment the volume you need based on your database choice:
+# volumes:
+#   postgres_data:  # For PostgreSQL
+#   mysql_data:     # For MySQL
+# SQLite doesn't need a volume (file is mounted directly)
+
+# ============================================================================
+# Networks
+# ============================================================================
+# Internal Docker network for service communication
+networks:
+  zero-board-network:
+    driver: bridge

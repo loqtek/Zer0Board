@@ -1,0 +1,14 @@
+fastapi
+uvicorn[standard]
+sqlalchemy[asyncio]
+pydantic
+pydantic-settings
+slowapi
+bcrypt
+httpx
+aiosqlite
+asyncpg
+aiomysql
+pydantic[email]
+psycopg2-binary
+pymysql

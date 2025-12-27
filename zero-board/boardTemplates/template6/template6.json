@@ -1,0 +1,116 @@
+{
+  "title": "Smart Home Control",
+  "description": "Control your smart home with Home Assistant integration, weather, calendar, and time. Perfect for a home automation dashboard.",
+  "layout_config": {
+    "pages": [
+      {
+        "id": "page-1",
+        "name": "Page 1",
+        "order": 0,
+        "settings": {
+          "use_global_settings": true
+        }
+      }
+    ],
+    "fullscreen": true
+  },
+  "settings": {
+    "background_type": "youtube",
+    "background_source": "mKCieTImjvU",
+    "background_config": {
+      "muted": false,
+      "volume": 50
+    },
+    "background_preset": null,
+    "resolution_width": 1920,
+    "resolution_height": 1080,
+    "aspect_ratio": "16:9",
+    "orientation": "landscape",
+    "auto_rotate_pages": false,
+    "lockout_mode": false
+  },
+  "widgets": [
+    {
+      "type": "clock",
+      "config": {
+        "themeType": "clear",
+        "hourFormat": "12",
+        "showSeconds": true,
+        "textColor": "#89b4fa"
+      },
+      "position": {
+        "x": 0,
+        "y": 0,
+        "w": 8,
+        "h": 6,
+        "page_id": "page-1"
+      }
+    },
+    {
+      "type": "calendar",
+      "config": {
+        "events": [],
+        "calendarType": "local",
+        "useLocalEvents": true,
+        "showTime": true,
+        "showLocation": true,
+        "maxEvents": 5,
+        "viewMode": "upcoming",
+        "themeType": "clear",
+        "textColor": "#cdd6f4"
+      },
+      "position": {
+        "x": 16,
+        "y": 0,
+        "w": 8,
+        "h": 6,
+        "page_id": "page-1"
+      }
+    },
+    {
+      "type": "home_assistant",
+      "config": {
+        "themeType": "clear",
+        "integration_id": null,
+        "entities": []
+      },
+      "position": {
+        "x": 0,
+        "y": 6,
+        "w": 12,
+        "h": 18,
+        "page_id": "page-1"
+      }
+    },
+    {
+      "type": "weather",
+      "config": {
+        "themeType": "clear",
+        "location": "New York, New York, United States",
+        "latitude": 40.71427,
+        "longitude": -74.00597
+      },
+      "position": {
+        "x": 8,
+        "y": 0,
+        "w": 8,
+        "h": 6,
+        "page_id": "page-1"
+      }
+    },
+    {
+      "type": "smart_home",
+      "config": {
+        "themeType": "clear",
+        "devices": []
+      },
+      "position": {
+        "x": 12,
+        "y": 6,
+        "w": 12,
+        "h": 18,
+        "page_id": "page-1"
+      }
+    }
+  ]
+}

@@ -1,0 +1,163 @@
+{
+  "title": "News & Media Hub",
+  "description": "Stay informed with news headlines, photo gallery, and bookmarks. Perfect for a media center or information dashboard.",
+  "layout_config": {
+    "pages": [
+      {
+        "id": "page-1",
+        "name": "Page 1",
+        "order": 0,
+        "settings": {
+          "use_global_settings": true
+        }
+      }
+    ],
+    "fullscreen": true
+  },
+  "settings": {
+    "background_type": "youtube",
+    "background_source": "5uZa3-RMFos",
+    "background_config": {
+      "muted": false,
+      "volume": 20
+    },
+    "background_preset": null,
+    "resolution_width": 1920,
+    "resolution_height": 1080,
+    "aspect_ratio": "16:9",
+    "orientation": "landscape",
+    "auto_rotate_pages": false,
+    "lockout_mode": false
+  },
+  "widgets": [
+    {
+      "type": "news",
+      "config": {
+        "headlines": [],
+        "useCustomHeadlines": false,
+        "rssFeedIds": [],
+        "themeType": "clear",
+        "displayStyle": "carousel",
+        "fontWeight": "600",
+        "fontSize": 28
+      },
+      "position": {
+        "x": 0,
+        "y": 0,
+        "w": 16,
+        "h": 12,
+        "page_id": "page-1"
+      }
+    },
+    {
+      "type": "photo",
+      "config": {
+        "themeType": "clear",
+        "imageUrls": [],
+        "autoPlay": true,
+        "interval": 5
+      },
+      "position": {
+        "x": 16,
+        "y": 0,
+        "w": 8,
+        "h": 12,
+        "page_id": "page-1"
+      }
+    },
+    {
+      "type": "news",
+      "config": {
+        "headlines": [],
+        "useCustomHeadlines": false,
+        "rssFeedIds": [],
+        "themeType": "clear",
+        "displayStyle": "ticker"
+      },
+      "position": {
+        "x": 12,
+        "y": 18,
+        "w": 12,
+        "h": 6,
+        "page_id": "page-1"
+      }
+    },
+    {
+      "type": "weather",
+      "config": {
+        "themeType": "clear",
+        "location": "Sydney, New South Wales, Australia",
+        "latitude": -33.86785,
+        "longitude": 151.20732,
+        "unit": "celsius"
+      },
+      "position": {
+        "x": 18,
+        "y": 12,
+        "w": 6,
+        "h": 6,
+        "page_id": "page-1"
+      }
+    },
+    {
+      "type": "bookmark",
+      "config": {
+        "themeType": "clear",
+        "bookmarks": [],
+        "groups": [
+          {
+            "id": "group-1764786630906",
+            "name": "Team A Resources",
+            "bookmarks": [
+              {
+                "id": "bookmark-1764786742848",
+                "name": "DNS 1",
+                "url": "",
+                "icon": ""
+              }
+            ],
+            "borderColor": "#d0373c",
+            "textColor": "#d62529"
+          },
+          {
+            "id": "group-1764786631783",
+            "name": "Team B Resources",
+            "bookmarks": [
+              {
+                "id": "bookmark-1764786728581",
+                "name": "DNS 2",
+                "url": "",
+                "icon": ""
+              }
+            ],
+            "borderColor": "#575add",
+            "textColor": "#2828ff"
+          }
+        ]
+      },
+      "position": {
+        "x": 0,
+        "y": 12,
+        "w": 12,
+        "h": 12,
+        "page_id": "page-1"
+      }
+    },
+    {
+      "type": "clock",
+      "config": {
+        "themeType": "clear",
+        "hourFormat": "12",
+        "showSeconds": true,
+        "textColor": "#ffffff"
+      },
+      "position": {
+        "x": 12,
+        "y": 12,
+        "w": 6,
+        "h": 6,
+        "page_id": "page-1"
+      }
+    }
+  ]
+}
