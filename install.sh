@@ -59,13 +59,30 @@ prompt_with_default() {
     local prompt="$1"
     local default="$2"
     local var_name="$3"
+    local input
     
-    if [ -n "$default" ]; then
-        read -p "$(echo -e "${BLUE}$prompt${NC} [${YELLOW}$default${NC}]: ")" input
-        eval "$var_name=\"\${input:-$default}\""
+    # Try to read from /dev/tty if stdin is not a terminal (piped input)
+    if [ -t 0 ]; then
+        # stdin is a terminal, use it directly
+        if [ -n "$default" ]; then
+            read -p "$(echo -e "${BLUE}$prompt${NC} [${YELLOW}$default${NC}]: ")" input
+            eval "$var_name=\"\${input:-$default}\""
+        else
+            read -p "$(echo -e "${BLUE}$prompt${NC}: ")" input
+            eval "$var_name=\"$input\""
+        fi
+    elif [ -c /dev/tty ]; then
+        # stdin is piped, read from /dev/tty
+        if [ -n "$default" ]; then
+            read -p "$(echo -e "${BLUE}$prompt${NC} [${YELLOW}$default${NC}]: ")" input </dev/tty
+            eval "$var_name=\"\${input:-$default}\""
+        else
+            read -p "$(echo -e "${BLUE}$prompt${NC}: ")" input </dev/tty
+            eval "$var_name=\"$input\""
+        fi
     else
-        read -p "$(echo -e "${BLUE}$prompt${NC}: ")" input
-        eval "$var_name=\"$input\""
+        print_error "No terminal available for input. Cannot run interactively."
+        exit 1
     fi
 }
 
@@ -75,10 +92,24 @@ prompt_yes_no() {
     local default="${2:-y}"
     local response
     
-    if [ "$default" = "y" ]; then
-        read -p "$(echo -e "${BLUE}$prompt${NC} [${YELLOW}Y/n${NC}]: ")" response
+    # Try to read from /dev/tty if stdin is not a terminal (piped input)
+    if [ -t 0 ]; then
+        # stdin is a terminal, use it directly
+        if [ "$default" = "y" ]; then
+            read -p "$(echo -e "${BLUE}$prompt${NC} [${YELLOW}Y/n${NC}]: ")" response
+        else
+            read -p "$(echo -e "${BLUE}$prompt${NC} [${YELLOW}y/N${NC}]: ")" response
+        fi
+    elif [ -c /dev/tty ]; then
+        # stdin is piped, read from /dev/tty
+        if [ "$default" = "y" ]; then
+            read -p "$(echo -e "${BLUE}$prompt${NC} [${YELLOW}Y/n${NC}]: ")" response </dev/tty
+        else
+            read -p "$(echo -e "${BLUE}$prompt${NC} [${YELLOW}y/N${NC}]: ")" response </dev/tty
+        fi
     else
-        read -p "$(echo -e "${BLUE}$prompt${NC} [${YELLOW}y/N${NC}]: ")" response
+        print_error "No terminal available for input. Cannot run interactively."
+        exit 1
     fi
     
     response="${response:-$default}"
@@ -159,7 +190,14 @@ configure_database() {
             
             prompt_with_default "PostgreSQL database name" "zeroboard" DB_NAME
             prompt_with_default "PostgreSQL username" "zeroboard" DB_USER
-            read -sp "$(echo -e "${BLUE}PostgreSQL password${NC}: ")" DB_PASSWORD
+            if [ -t 0 ]; then
+                read -sp "$(echo -e "${BLUE}PostgreSQL password${NC}: ")" DB_PASSWORD
+            elif [ -c /dev/tty ]; then
+                read -sp "$(echo -e "${BLUE}PostgreSQL password${NC}: ")" DB_PASSWORD </dev/tty
+            else
+                print_error "No terminal available for password input."
+                exit 1
+            fi
             echo ""
             
             # For Docker, use service name; for external, use provided host
@@ -197,7 +235,14 @@ configure_database() {
             
             prompt_with_default "MySQL database name" "zeroboard" DB_NAME
             prompt_with_default "MySQL username" "zeroboard" DB_USER
-            read -sp "$(echo -e "${BLUE}MySQL password${NC}: ")" DB_PASSWORD
+            if [ -t 0 ]; then
+                read -sp "$(echo -e "${BLUE}MySQL password${NC}: ")" DB_PASSWORD
+            elif [ -c /dev/tty ]; then
+                read -sp "$(echo -e "${BLUE}MySQL password${NC}: ")" DB_PASSWORD </dev/tty
+            else
+                print_error "No terminal available for password input."
+                exit 1
+            fi
             echo ""
             
             # For Docker, use service name; for external, use provided host
@@ -652,6 +697,21 @@ main() {
         print_info "This script should be run from the Zer0Board root directory."
         print_info "If you're installing from GitHub, the script will clone the repo."
         echo ""
+        
+        # Check if we can interact with the terminal
+        # When piped (curl | bash), stdin is not a terminal, but /dev/tty should work
+        if [ ! -t 0 ]; then
+            if [ ! -c /dev/tty ] || [ ! -r /dev/tty ]; then
+                print_error "No terminal available for interactive input."
+                print_info "If you're running this via 'curl | bash', make sure you're running it in a terminal."
+                print_info "Alternatively, download the script first:"
+                print_info "  curl -fsSL https://raw.githubusercontent.com/loqtek/Zer0Board/main/install.sh -o install.sh"
+                print_info "  chmod +x install.sh"
+                print_info "  ./install.sh"
+                exit 1
+            fi
+            print_info "Detected piped input. Reading from /dev/tty for user interaction."
+        fi
         
         if prompt_yes_no "Clone Zer0Board repository now?" "y"; then
             if ! command_exists git; then
