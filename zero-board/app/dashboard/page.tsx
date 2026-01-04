@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { useAuth } from "@/lib/auth";
 import { useTheme } from "@/lib/theme";
 import { boardsApi, widgetsApi } from "@/lib/api";
-import type { Board } from "@/lib/types/api";
+import type { Board, Widget } from "@/lib/types/api";
 import { getErrorMessage } from "@/lib/utils/errors";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -156,7 +156,7 @@ export default function DashboardPage() {
         description: boardDetail.description,
         layout_config: boardDetail.layout_config,
         settings: boardDetail.settings,
-        widgets: boardDetail.widgets.map(w => ({
+        widgets: boardDetail.widgets.map((w: Widget) => ({
           type: w.type,
           config: w.config,
           position: w.position,

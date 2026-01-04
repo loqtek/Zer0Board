@@ -6,6 +6,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { widgetsApi, settingsApi } from "@/lib/api";
 import { getErrorMessage } from "@/lib/utils/errors";
+import type { WidgetTemplate } from "@/lib/types/api";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -87,7 +88,7 @@ export function AddWidgetDialog({ boardId, currentPageId, onClose }: AddWidgetDi
                   {category.category}
                 </h4>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                  {category.widgets.map((widget) => {
+                  {category.widgets.map((widget: WidgetTemplate["widgets"][number]) => {
                     const integration = integrations?.find(
                       (i) => i.service === widget.type && i.is_active
                     );

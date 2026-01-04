@@ -23,13 +23,19 @@ export function ResponsiveGridLayout({
 }: GridLayoutProps) {
   const layout = useMemo(() => {
     return widgets.map((widget) => {
-      const pos = widget.position || { x: 0, y: 0, w: 4, h: 4 };
+      const pos = widget.position || {};
+      // Ensure all position values are numbers
+      const x = typeof pos.x === "number" ? pos.x : 0;
+      const y = typeof pos.y === "number" ? pos.y : 0;
+      const w = typeof pos.w === "number" ? pos.w : 4;
+      const h = typeof pos.h === "number" ? pos.h : 4;
+      
       return {
         i: widget.id.toString(),
-        x: pos.x || 0,
-        y: pos.y || 0,
-        w: pos.w || 4,
-        h: pos.h || 4,
+        x,
+        y,
+        w,
+        h,
         minW: 2,
         minH: 2,
         maxW: cols, // Prevent widgets from touching right edge (leave 1 col margin)

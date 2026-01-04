@@ -56,9 +56,12 @@ export function HomeAssistantWidget({
   });
 
   // Widget configuration
-  const integrationId = widget.config?.homeAssistantIntegrationId;
-  const entityIds = widget.config?.entityIds || [];
-  const refreshInterval = widget.config?.refreshInterval || 30; // 30 seconds default
+  const integrationIdRaw = widget.config?.homeAssistantIntegrationId;
+  const integrationId = typeof integrationIdRaw === "number" ? integrationIdRaw : undefined;
+  const entityIdsRaw = widget.config?.entityIds;
+  const entityIds = Array.isArray(entityIdsRaw) ? entityIdsRaw : [];
+  const refreshIntervalRaw = widget.config?.refreshInterval;
+  const refreshInterval = typeof refreshIntervalRaw === "number" ? refreshIntervalRaw : 30; // 30 seconds default
   const showControls = widget.config?.showControls !== false;
   const displayMode = widget.config?.displayMode || "grid"; // grid, list, single
 

@@ -34,7 +34,8 @@ export function StravaWidget({ widget, isEditMode, onDelete, onConfigure, onDupl
   const showTotalStats = widget.config?.showTotalStats === true;
   const showLastActivity = widget.config?.showLastActivity !== false;
   const metricUnit = widget.config?.metricUnit || "km"; // km or miles
-  const refreshInterval = widget.config?.refreshInterval || 300; // 5 minutes default
+  const refreshIntervalRaw = widget.config?.refreshInterval;
+  const refreshInterval = typeof refreshIntervalRaw === "number" ? refreshIntervalRaw : 300; // 5 minutes default
 
   const [stats, setStats] = useState<StravaStats | null>(null);
   const [isLoading, setIsLoading] = useState(false);

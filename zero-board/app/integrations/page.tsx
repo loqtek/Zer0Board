@@ -18,6 +18,7 @@ import {
 import { boardsApi } from "@/lib/api";
 import { backgroundPresets, backgroundCategories, getYouTubeVideoId, getYouTubeThumbnail } from "@/lib/data/backgroundPresets";
 import type { BackgroundPreset } from "@/lib/types/data";
+import type { WidgetTemplate } from "@/lib/types/api";
 import Image from "next/image";
 
 const categoryIcons: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -426,9 +427,9 @@ export default function IntegrationsPage() {
           
           {categories.map((category) => {
             const Icon = categoryIcons[category] || Settings2;
-            const categoryWidgets = templates?.find(c => c.category === category)?.widgets || [];
-            const hasRequiredAuth = categoryWidgets.some(w => w.requires_auth || w.requires_config);
-            const connectedCount = categoryWidgets.filter(w => 
+            const categoryWidgets = templates?.find((c: WidgetTemplate) => c.category === category)?.widgets || [];
+            const hasRequiredAuth = categoryWidgets.some((w: WidgetTemplate["widgets"][number]) => w.requires_auth || w.requires_config);
+            const connectedCount = categoryWidgets.filter((w: WidgetTemplate["widgets"][number]) => 
               integrations?.some(i => i.service === w.type && i.is_active)
             ).length;
             
@@ -449,7 +450,7 @@ export default function IntegrationsPage() {
                 <span className="flex-1 text-sm font-medium">{category}</span>
                 {hasRequiredAuth && (
                   <span className="text-xs px-1.5 py-0.5 rounded bg-[var(--muted)] text-[var(--text-muted)]">
-                    {connectedCount}/{categoryWidgets.filter(w => w.requires_auth || w.requires_config).length}
+                    {connectedCount}/{categoryWidgets.filter((w: WidgetTemplate["widgets"][number]) => w.requires_auth || w.requires_config).length}
                   </span>
                 )}
               </button>
@@ -641,7 +642,7 @@ export default function IntegrationsPage() {
 
               {/* Widgets Grid */}
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mb-6">
-                {selectedCategoryData?.widgets.map((widget) => {
+                {selectedCategoryData?.widgets.map((widget: WidgetTemplate["widgets"][number]) => {
                   const integration = integrations?.find(
                     (i) => i.service === widget.type && i.is_active
                   );
@@ -1046,16 +1047,22 @@ export default function IntegrationsPage() {
                             )}
                             <span className="text-sm font-medium">{testResult.message}</span>
                           </div>
-                          {testResult.details && testResult.details.calendars && (
-                            <div className="mt-2 text-xs">
-                              <p>Available calendars:</p>
-                              <ul className="list-disc list-inside ml-2">
-                                {(testResult.details.calendars as Array<{ summary?: string; name?: string; id?: string }>).map((cal, idx: number) => (
-                                  <li key={idx}>{cal.summary || cal.name || cal.id}</li>
-                                ))}
-                              </ul>
-                            </div>
-                          )}
+                          {(() => {
+                            const calendars = testResult.details?.calendars;
+                            if (calendars && Array.isArray(calendars)) {
+                              return (
+                                <div className="mt-2 text-xs">
+                                  <p>Available calendars:</p>
+                                  <ul className="list-disc list-inside ml-2">
+                                    {(calendars as Array<{ summary?: string; name?: string; id?: string }>).map((cal: { summary?: string; name?: string; id?: string }, idx: number) => (
+                                      <li key={idx}>{cal.summary || cal.name || cal.id || ""}</li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              );
+                            }
+                            return null;
+                          })()}
                         </div>
                       )}
 
@@ -1390,11 +1397,11 @@ export default function IntegrationsPage() {
                   {integrationsLoading ? (
                     <div className="text-center text-[var(--text-muted)] py-8">Loading...</div>
                   ) : integrations && integrations.filter(i => 
-                    selectedCategoryData.widgets.some(w => w.type === i.service)
+                    selectedCategoryData.widgets.some((w: WidgetTemplate["widgets"][number]) => w.type === i.service)
                   ).length > 0 ? (
                     <div className="grid gap-4 md:grid-cols-2">
                       {integrations
-                        .filter(i => selectedCategoryData.widgets.some(w => w.type === i.service))
+                        .filter(i => selectedCategoryData.widgets.some((w: WidgetTemplate["widgets"][number]) => w.type === i.service))
                         .map((integration) => (
                           <Card
                             key={integration.id}
@@ -1409,7 +1416,7 @@ export default function IntegrationsPage() {
                                 <div className="flex-1">
                                   <div className="flex items-center gap-2 mb-1">
                                     <h3 className="font-semibold text-[var(--foreground)]">
-                                      {integration.service.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())}
+                                      {integration.service.replace(/_/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase())}
                                     </h3>
                                     {integration.is_active ? (
                                       <CheckCircle2 className="h-4 w-4 text-green-500" />
@@ -1428,7 +1435,7 @@ export default function IntegrationsPage() {
                                   variant="outline"
                                   size="sm"
                                   onClick={() => {
-                                    const widget = selectedCategoryData.widgets.find(w => w.type === integration.service);
+                                    const widget = selectedCategoryData.widgets.find((w: WidgetTemplate["widgets"][number]) => w.type === integration.service);
                                     if (widget) {
                                       setSelectedWidget(widget);
                                       setShowSetupForm(true);

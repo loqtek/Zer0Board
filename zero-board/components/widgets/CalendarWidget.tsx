@@ -35,16 +35,20 @@ export function CalendarWidget({ widget, isEditMode, onDelete, onConfigure, onDu
     }
   }
   
-  const icalUrl = widget.config?.icalUrl;
+  const icalUrlRaw = widget.config?.icalUrl;
+  const icalUrl = typeof icalUrlRaw === "string" ? icalUrlRaw : undefined;
   const useLocalEvents = widget.config?.useLocalEvents !== false;
   const showTime = widget.config?.showTime !== false;
   const showLocation = widget.config?.showLocation !== false;
-  const maxEvents = widget.config?.maxEvents || 5;
+  const maxEventsRaw = widget.config?.maxEvents;
+  const maxEvents = typeof maxEventsRaw === "number" ? maxEventsRaw : 5;
   const viewMode = widget.config?.viewMode || "upcoming"; // upcoming, today, week
   
   // Extract stable primitive values from config
-  const localEvents = widget.config?.events || [];
-  const calendarId = widget.config?.calendarId || "primary";
+  const localEventsRaw = widget.config?.events;
+  const localEvents = Array.isArray(localEventsRaw) ? localEventsRaw : [];
+  const calendarIdRaw = widget.config?.calendarId;
+  const calendarId = typeof calendarIdRaw === "string" ? calendarIdRaw : "primary";
 
   const { data: integrations } = useQuery({
     queryKey: ["integrations"],
@@ -61,15 +65,17 @@ export function CalendarWidget({ widget, isEditMode, onDelete, onConfigure, onDu
   
   // Use integration ICS URL if available, otherwise use widget config
   // Check both ical_url and url fields, and also check the raw config object
-  const googleCalendarUrl = googleCalendarIntegration?.config?.ical_url || 
-                            googleCalendarIntegration?.config?.url || 
-                            null;
-  const microsoftCalendarUrl = microsoftCalendarIntegration?.config?.ical_url || 
-                              microsoftCalendarIntegration?.config?.url || 
-                              null;
+  const googleCalendarUrlRaw = googleCalendarIntegration?.config?.ical_url || 
+                            googleCalendarIntegration?.config?.url;
+  const googleCalendarUrl = typeof googleCalendarUrlRaw === "string" ? googleCalendarUrlRaw : null;
+  
+  const microsoftCalendarUrlRaw = microsoftCalendarIntegration?.config?.ical_url || 
+                              microsoftCalendarIntegration?.config?.url;
+  const microsoftCalendarUrl = typeof microsoftCalendarUrlRaw === "string" ? microsoftCalendarUrlRaw : null;
   
   // Legacy support: check for access_token (OAuth)
-  const googleAccessToken = googleCalendarIntegration?.config?.access_token || null;
+  const googleAccessTokenRaw = googleCalendarIntegration?.config?.access_token;
+  const googleAccessToken = typeof googleAccessTokenRaw === "string" ? googleAccessTokenRaw : null;
   
   // Debug logging - log the full integration object to see what we're working with
   useEffect(() => {

@@ -13,12 +13,16 @@ interface HealthWidgetProps {
 }
 
 export function HealthWidget({ widget, isEditMode, onDelete, onConfigure, onDuplicate }: HealthWidgetProps) {
-  const stats = widget.config?.stats || {
+  const statsRaw = widget.config?.stats;
+  const defaultStats = {
     steps: 8543,
     calories: 2150,
     heartRate: 72,
     activeMinutes: 45,
   };
+  const stats = statsRaw && typeof statsRaw === "object" && !Array.isArray(statsRaw) 
+    ? { ...defaultStats, ...(statsRaw as Record<string, unknown>) }
+    : defaultStats;
 
   return (
     <WidgetWrapper widget={widget} isEditMode={isEditMode} onDelete={onDelete} onConfigure={onConfigure} onDuplicate={onDuplicate}>

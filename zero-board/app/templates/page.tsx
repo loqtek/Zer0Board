@@ -288,13 +288,20 @@ export default function TemplatesPage() {
                           <span className="font-medium">v{template.data.version}</span>
                         </div>
                       )}
-                      {template.data.settings?.resolution_width && (
-                        <div className="flex items-center gap-1">
-                          <span>
-                            {template.data.settings.resolution_width} × {template.data.settings.resolution_height}
-                          </span>
-                        </div>
-                      )}
+                      {(() => {
+                        const width = template.data.settings?.resolution_width;
+                        const height = template.data.settings?.resolution_height;
+                        if (typeof width === "number" && typeof height === "number") {
+                          return (
+                            <div className="flex items-center gap-1">
+                              <span>
+                                {width} × {height}
+                              </span>
+                            </div>
+                          );
+                        }
+                        return null;
+                      })()}
                     </div>
 
                     {/* Actions */}
@@ -497,31 +504,49 @@ export default function TemplatesPage() {
                           Board Settings
                         </h3>
                         <div className="space-y-3">
-                          {selectedTemplate.data.settings.resolution_width && (
-                            <div className="p-3 rounded-lg border border-[var(--border)] bg-[var(--card-bg)]">
-                              <div className="text-xs text-[var(--text-muted)] mb-1">Resolution</div>
-                              <div className="text-sm font-medium text-[var(--foreground)]">
-                                {selectedTemplate.data.settings.resolution_width} ×{" "}
-                                {selectedTemplate.data.settings.resolution_height}
-                              </div>
-                            </div>
-                          )}
-                          {selectedTemplate.data.settings.aspect_ratio && (
-                            <div className="p-3 rounded-lg border border-[var(--border)] bg-[var(--card-bg)]">
-                              <div className="text-xs text-[var(--text-muted)] mb-1">Aspect Ratio</div>
-                              <div className="text-sm font-medium text-[var(--foreground)]">
-                                {selectedTemplate.data.settings.aspect_ratio}
-                              </div>
-                            </div>
-                          )}
-                          {selectedTemplate.data.settings.background_type && (
-                            <div className="p-3 rounded-lg border border-[var(--border)] bg-[var(--card-bg)]">
-                              <div className="text-xs text-[var(--text-muted)] mb-1">Background</div>
-                              <div className="text-sm font-medium text-[var(--foreground)]">
-                                {selectedTemplate.data.settings.background_type.replace(/_/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase())}
-                              </div>
-                            </div>
-                          )}
+                          {(() => {
+                            const width = selectedTemplate.data.settings?.resolution_width;
+                            const height = selectedTemplate.data.settings?.resolution_height;
+                            if (typeof width === "number" && typeof height === "number") {
+                              return (
+                                <div className="p-3 rounded-lg border border-[var(--border)] bg-[var(--card-bg)]">
+                                  <div className="text-xs text-[var(--text-muted)] mb-1">Resolution</div>
+                                  <div className="text-sm font-medium text-[var(--foreground)]">
+                                    {width} × {height}
+                                  </div>
+                                </div>
+                              );
+                            }
+                            return null;
+                          })()}
+                          {(() => {
+                            const aspectRatio = selectedTemplate.data.settings?.aspect_ratio;
+                            if (typeof aspectRatio === "string" && aspectRatio) {
+                              return (
+                                <div className="p-3 rounded-lg border border-[var(--border)] bg-[var(--card-bg)]">
+                                  <div className="text-xs text-[var(--text-muted)] mb-1">Aspect Ratio</div>
+                                  <div className="text-sm font-medium text-[var(--foreground)]">
+                                    {aspectRatio}
+                                  </div>
+                                </div>
+                              );
+                            }
+                            return null;
+                          })()}
+                          {(() => {
+                            const backgroundType = selectedTemplate.data.settings?.background_type;
+                            if (typeof backgroundType === "string" && backgroundType) {
+                              return (
+                                <div className="p-3 rounded-lg border border-[var(--border)] bg-[var(--card-bg)]">
+                                  <div className="text-xs text-[var(--text-muted)] mb-1">Background</div>
+                                  <div className="text-sm font-medium text-[var(--foreground)]">
+                                    {backgroundType.replace(/_/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase())}
+                                  </div>
+                                </div>
+                              );
+                            }
+                            return null;
+                          })()}
                           {selectedTemplate.data.version && (
                             <div className="p-3 rounded-lg border border-[var(--border)] bg-[var(--card-bg)]">
                               <div className="text-xs text-[var(--text-muted)] mb-1">Version</div>

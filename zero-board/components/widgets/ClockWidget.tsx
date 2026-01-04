@@ -19,7 +19,8 @@ export function ClockWidget({ widget, isEditMode, onDelete, onConfigure }: Clock
   const showDate = widget.config?.showDate !== false; // Default to true
   const showSeconds = widget.config?.showSeconds === true; // Default to false
   const dateFormat = widget.config?.dateFormat || "long";
-  const timezone = widget.config?.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const timezoneRaw = widget.config?.timezone;
+  const timezone = typeof timezoneRaw === "string" ? timezoneRaw : Intl.DateTimeFormat().resolvedOptions().timeZone;
   
   // Responsive sizing based on widget dimensions
   const [containerRef, setContainerRef] = useState<HTMLDivElement | null>(null);

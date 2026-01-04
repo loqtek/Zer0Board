@@ -12,12 +12,22 @@ interface SlackWidgetProps {
 }
 
 export function SlackWidget({ widget, isEditMode, onDelete, onConfigure }: SlackWidgetProps) {
-  const channel = widget.config?.channel || "general";
-  const unreadCount = widget.config?.unreadCount || 3;
-  const recentMessages = widget.config?.recentMessages || [
+  const channelRaw = widget.config?.channel;
+  const channel = typeof channelRaw === "string" ? channelRaw : "general";
+  const unreadCountRaw = widget.config?.unreadCount;
+  const unreadCount = typeof unreadCountRaw === "number" ? unreadCountRaw : 3;
+  const recentMessagesRaw = widget.config?.recentMessages;
+  const defaultMessages = [
     { user: "Alice", message: "Hey team!", time: "1h ago" },
     { user: "Bob", message: "Great work on the project", time: "2h ago" },
   ];
+  const recentMessages = Array.isArray(recentMessagesRaw) 
+    ? recentMessagesRaw.filter((msg: unknown): msg is { user: string; message: string; time: string } => {
+        if (!msg || typeof msg !== "object") return false;
+        const m = msg as Record<string, unknown>;
+        return typeof m.user === "string" && typeof m.message === "string" && typeof m.time === "string";
+      })
+    : defaultMessages;
 
   return (
     <WidgetWrapper widget={widget} isEditMode={isEditMode} onDelete={onDelete} onConfigure={onConfigure}>
@@ -43,7 +53,7 @@ export function SlackWidget({ widget, isEditMode, onDelete, onConfigure }: Slack
               <p className="text-sm text-[var(--text-muted)]">No messages</p>
             </div>
           ) : (
-            recentMessages.map((msg: { text?: string; user?: string; ts?: string; [key: string]: unknown }, index: number) => (
+            recentMessages.map((msg, index: number) => (
               <div
                 key={index}
                 className="rounded border border-[var(--border)] bg-[var(--muted)]/30 p-2 hover:bg-[var(--muted)]/50 transition-colors"

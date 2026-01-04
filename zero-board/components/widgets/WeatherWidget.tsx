@@ -20,24 +20,36 @@ export function WeatherWidget({ widget, isEditMode, onDelete, onConfigure }: Wea
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const unit = widget.config?.unit || "fahrenheit";
-  const location = widget.config?.location || "";
-  const latitude = widget.config?.latitude;
-  const longitude = widget.config?.longitude;
+  const unitRaw = widget.config?.unit;
+  const unit = typeof unitRaw === "string" && (unitRaw === "celsius" || unitRaw === "fahrenheit") ? unitRaw : "fahrenheit";
+  const locationRaw = widget.config?.location;
+  const location = typeof locationRaw === "string" ? locationRaw : "";
+  const latitudeRaw = widget.config?.latitude;
+  const latitude = typeof latitudeRaw === "number" ? latitudeRaw : undefined;
+  const longitudeRaw = widget.config?.longitude;
+  const longitude = typeof longitudeRaw === "number" ? longitudeRaw : undefined;
   const showDetails = widget.config?.showDetails !== false;
   const showTemperature = widget.config?.showTemperature !== false;
   const showCondition = widget.config?.showCondition !== false;
   const showLocation = widget.config?.showLocation !== false;
   
   // Text styling config
+  const fontSizeRaw = widget.config?.fontSize;
+  const fontWeightRaw = widget.config?.fontWeight;
+  const lineHeightRaw = widget.config?.lineHeight;
+  const letterSpacingRaw = widget.config?.letterSpacing;
+  const textColorRaw = widget.config?.textColor;
+  const textAlignRaw = widget.config?.textAlign;
+  const textTransformRaw = widget.config?.textTransform;
+  
   const textStyle = {
-    fontSize: widget.config?.fontSize ? `${widget.config.fontSize}px` : undefined,
-    fontWeight: widget.config?.fontWeight || undefined,
-    lineHeight: widget.config?.lineHeight || undefined,
-    letterSpacing: widget.config?.letterSpacing ? `${widget.config.letterSpacing}px` : undefined,
-    color: widget.config?.textColor || undefined,
-    textAlign: widget.config?.textAlign || undefined,
-    textTransform: widget.config?.textTransform || undefined,
+    fontSize: typeof fontSizeRaw === "number" || typeof fontSizeRaw === "string" ? `${fontSizeRaw}px` : undefined,
+    fontWeight: typeof fontWeightRaw === "string" ? fontWeightRaw : undefined,
+    lineHeight: typeof lineHeightRaw === "string" || typeof lineHeightRaw === "number" ? lineHeightRaw : undefined,
+    letterSpacing: typeof letterSpacingRaw === "number" || typeof letterSpacingRaw === "string" ? `${letterSpacingRaw}px` : undefined,
+    color: typeof textColorRaw === "string" ? textColorRaw : undefined,
+    textAlign: typeof textAlignRaw === "string" ? textAlignRaw : undefined,
+    textTransform: typeof textTransformRaw === "string" ? textTransformRaw : undefined,
   };
 
   useEffect(() => {
@@ -152,14 +164,14 @@ export function WeatherWidget({ widget, isEditMode, onDelete, onConfigure }: Wea
         className="flex h-full w-full flex-col items-center justify-center text-center text-[var(--foreground)]"
         style={{ 
           color: textStyle.color || "var(--foreground)",
-          textAlign: textStyle.textAlign || "center",
+          textAlign: (textStyle.textAlign || "center") as "left" | "center" | "right" | "justify",
         }}
       >
         {showTemperature && (
           <div 
             className="font-bold" 
             style={{ 
-              fontSize: textStyle.fontSize || `${fontSize * 1.5}px`,
+              fontSize: textStyle.fontSize || `${(typeof fontSize === "number" ? fontSize : 14) * 1.5}px`,
               fontWeight: textStyle.fontWeight || "bold",
               lineHeight: textStyle.lineHeight,
               letterSpacing: textStyle.letterSpacing,
@@ -173,7 +185,7 @@ export function WeatherWidget({ widget, isEditMode, onDelete, onConfigure }: Wea
           <div 
             className="mt-2 opacity-80" 
             style={{ 
-              fontSize: textStyle.fontSize ? `${parseInt(textStyle.fontSize) * 0.53}px` : `${fontSize * 0.8}px`,
+              fontSize: textStyle.fontSize ? `${parseInt(textStyle.fontSize) * 0.53}px` : `${(typeof fontSize === "number" ? fontSize : 14) * 0.8}px`,
               fontWeight: textStyle.fontWeight || "normal",
               lineHeight: textStyle.lineHeight,
               letterSpacing: textStyle.letterSpacing,
@@ -187,7 +199,7 @@ export function WeatherWidget({ widget, isEditMode, onDelete, onConfigure }: Wea
           <div 
             className="mt-1 opacity-60" 
             style={{ 
-              fontSize: textStyle.fontSize ? `${parseInt(textStyle.fontSize) * 0.4}px` : `${fontSize * 0.6}px`,
+              fontSize: textStyle.fontSize ? `${parseInt(textStyle.fontSize) * 0.4}px` : `${(typeof fontSize === "number" ? fontSize : 14) * 0.6}px`,
               fontWeight: textStyle.fontWeight || "normal",
               lineHeight: textStyle.lineHeight,
               letterSpacing: textStyle.letterSpacing,

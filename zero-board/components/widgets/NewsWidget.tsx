@@ -26,28 +26,44 @@ export function NewsWidget({ widget, isEditMode, onDelete, onConfigure, onDuplic
   const [isLoading, setIsLoading] = useState(false);
   const [carouselIndex, setCarouselIndex] = useState(0);
 
-  const apiKey = widget.config?.newsApiKey;
-  const country = widget.config?.country || "us";
-  const category = widget.config?.category;
+  const apiKeyRaw = widget.config?.newsApiKey;
+  const apiKey = typeof apiKeyRaw === "string" ? apiKeyRaw : undefined;
+  const countryRaw = widget.config?.country;
+  const country = typeof countryRaw === "string" ? countryRaw : "us";
+  const categoryRaw = widget.config?.category;
+  const category = typeof categoryRaw === "string" ? categoryRaw : undefined;
   const useCustomHeadlines = widget.config?.useCustomHeadlines === true;
-  const customHeadlines = widget.config?.headlines || [];
-  const customRssUrl = widget.config?.customRssUrl;
-  const rssFeedIds = widget.config?.rssFeedIds || [];
-  const displayStyle: NewsDisplayStyle = widget.config?.displayStyle || "list";
+  const customHeadlinesRaw = widget.config?.headlines;
+  const customHeadlines = Array.isArray(customHeadlinesRaw) ? customHeadlinesRaw : [];
+  const customRssUrlRaw = widget.config?.customRssUrl;
+  const customRssUrl = typeof customRssUrlRaw === "string" ? customRssUrlRaw : undefined;
+  const rssFeedIdsRaw = widget.config?.rssFeedIds;
+  const rssFeedIds = Array.isArray(rssFeedIdsRaw) ? rssFeedIdsRaw : [];
+  const displayStyleRaw = widget.config?.displayStyle;
+  const displayStyle: NewsDisplayStyle = (typeof displayStyleRaw === "string" && ["list", "grid", "carousel", "ticker"].includes(displayStyleRaw) ? displayStyleRaw : "list") as NewsDisplayStyle;
   const showTitle = widget.config?.showTitle !== false;
   const showSource = widget.config?.showSource !== false;
   const showDescription = widget.config?.showDescription !== false;
-  const descriptionLength = widget.config?.descriptionLength || 150;
+  const descriptionLengthRaw = widget.config?.descriptionLength;
+  const descriptionLength = typeof descriptionLengthRaw === "number" ? descriptionLengthRaw : 150;
   
   // Text styling config
+  const fontSizeRaw = widget.config?.fontSize;
+  const fontWeightRaw = widget.config?.fontWeight;
+  const lineHeightRaw = widget.config?.lineHeight;
+  const letterSpacingRaw = widget.config?.letterSpacing;
+  const textColorRaw = widget.config?.textColor;
+  const textAlignRaw = widget.config?.textAlign;
+  const textTransformRaw = widget.config?.textTransform;
+  
   const textStyle = {
-    fontSize: widget.config?.fontSize ? `${widget.config.fontSize}px` : undefined,
-    fontWeight: widget.config?.fontWeight || undefined,
-    lineHeight: widget.config?.lineHeight || undefined,
-    letterSpacing: widget.config?.letterSpacing ? `${widget.config.letterSpacing}px` : undefined,
-    color: widget.config?.textColor || undefined,
-    textAlign: widget.config?.textAlign || undefined,
-    textTransform: widget.config?.textTransform || undefined,
+    fontSize: typeof fontSizeRaw === "number" || typeof fontSizeRaw === "string" ? `${fontSizeRaw}px` : undefined,
+    fontWeight: typeof fontWeightRaw === "string" ? fontWeightRaw : undefined,
+    lineHeight: typeof lineHeightRaw === "string" || typeof lineHeightRaw === "number" ? lineHeightRaw : undefined,
+    letterSpacing: typeof letterSpacingRaw === "number" || typeof letterSpacingRaw === "string" ? `${letterSpacingRaw}px` : undefined,
+    color: typeof textColorRaw === "string" ? textColorRaw : undefined,
+    textAlign: typeof textAlignRaw === "string" ? textAlignRaw : undefined,
+    textTransform: typeof textTransformRaw === "string" ? textTransformRaw : undefined,
   };
   
   // Fetch RSS feed URLs from integrations if feed IDs are configured
@@ -196,13 +212,13 @@ export function NewsWidget({ widget, isEditMode, onDelete, onConfigure, onDuplic
     return Math.max(10, Math.min(baseSize, 16));
   }, [containerSize, widget.config?.fontSize]);
 
-  const displayArticles = articles.length > 0 ? articles : customHeadlines.map((h: string) => ({ title: h }));
+  const displayArticles: NewsArticle[] = articles.length > 0 ? articles : customHeadlines.map((h: string) => ({ title: h, url: undefined, description: undefined, source: undefined, publishedAt: undefined }));
   const limitedArticles = displayArticles.slice(0, displayStyle === "grid" ? 6 : displayStyle === "carousel" ? 10 : 20);
 
   const renderListStyle = () => (
     <ul 
       className="flex-1 space-y-2 overflow-y-auto"
-      style={{ textAlign: textStyle.textAlign || "left" }}
+      style={{ textAlign: (textStyle.textAlign || "left") as "left" | "center" | "right" | "justify" }}
     >
       {limitedArticles.map((article: NewsArticle, index: number) => (
         <li
@@ -233,7 +249,7 @@ export function NewsWidget({ widget, isEditMode, onDelete, onConfigure, onDuplic
             <div 
               className="text-xs opacity-60 mt-1"
               style={{ 
-                fontSize: textStyle.fontSize ? `${parseInt(textStyle.fontSize) * 0.75}px` : undefined,
+                fontSize: textStyle.fontSize ? `${parseInt(textStyle.fontSize.replace("px", "")) * 0.75}px` : undefined,
               }}
             >
               {article.source}
@@ -247,14 +263,14 @@ export function NewsWidget({ widget, isEditMode, onDelete, onConfigure, onDuplic
   const renderGridStyle = () => (
     <div 
       className="flex-1 overflow-y-auto grid grid-cols-2 gap-2"
-      style={{ textAlign: textStyle.textAlign || "left" }}
+      style={{ textAlign: (textStyle.textAlign || "left") as "left" | "center" | "right" | "justify" }}
     >
       {limitedArticles.map((article: NewsArticle, index: number) => (
         <div
           key={index}
           className="border border-[var(--input-border)] rounded p-2 hover:bg-[var(--input-bg)] transition-colors"
           style={{ 
-            fontSize: textStyle.fontSize ? `${parseInt(textStyle.fontSize) * 0.85}px` : `${fontSize * 0.85}px`,
+            fontSize: textStyle.fontSize ? `${parseInt(textStyle.fontSize.replace("px", "")) * 0.85}px` : `${(typeof fontSize === "number" ? fontSize : 14) * 0.85}px`,
             fontWeight: textStyle.fontWeight || "normal",
             lineHeight: textStyle.lineHeight,
             letterSpacing: textStyle.letterSpacing,
@@ -278,7 +294,7 @@ export function NewsWidget({ widget, isEditMode, onDelete, onConfigure, onDuplic
             <div 
               className="text-xs opacity-60 mt-1"
               style={{ 
-                fontSize: textStyle.fontSize ? `${parseInt(textStyle.fontSize) * 0.64}px` : undefined,
+                fontSize: textStyle.fontSize ? `${parseInt(textStyle.fontSize.replace("px", "")) * 0.64}px` : undefined,
               }}
             >
               {article.source}
@@ -301,7 +317,7 @@ export function NewsWidget({ widget, isEditMode, onDelete, onConfigure, onDuplic
     return (
       <div 
         className="flex-1 flex flex-col items-center justify-center relative"
-        style={{ textAlign: textStyle.textAlign || "center" }}
+        style={{ textAlign: (textStyle.textAlign || "center") as "left" | "center" | "right" | "justify" }}
       >
         <div className="px-4">
           {currentArticle.url ? (
@@ -311,7 +327,7 @@ export function NewsWidget({ widget, isEditMode, onDelete, onConfigure, onDuplic
               rel="noopener noreferrer"
               className="hover:underline block"
               style={{ 
-                fontSize: textStyle.fontSize ? `${parseInt(textStyle.fontSize) * 1.2}px` : `${fontSize * 1.2}px`,
+                fontSize: textStyle.fontSize ? `${parseInt(textStyle.fontSize.replace("px", "")) * 1.2}px` : `${(typeof fontSize === "number" ? fontSize : 14) * 1.2}px`,
                 fontWeight: textStyle.fontWeight || "normal",
                 lineHeight: textStyle.lineHeight,
                 letterSpacing: textStyle.letterSpacing,
@@ -324,7 +340,7 @@ export function NewsWidget({ widget, isEditMode, onDelete, onConfigure, onDuplic
           ) : (
             <div 
               style={{ 
-                fontSize: textStyle.fontSize ? `${parseInt(textStyle.fontSize) * 1.2}px` : `${fontSize * 1.2}px`,
+                fontSize: textStyle.fontSize ? `${parseInt(textStyle.fontSize.replace("px", "")) * 1.2}px` : `${(typeof fontSize === "number" ? fontSize : 14) * 1.2}px`,
                 fontWeight: textStyle.fontWeight || "normal",
                 lineHeight: textStyle.lineHeight,
                 letterSpacing: textStyle.letterSpacing,
@@ -339,7 +355,7 @@ export function NewsWidget({ widget, isEditMode, onDelete, onConfigure, onDuplic
             <p 
               className="text-xs opacity-70 mt-2" 
               style={{ 
-                fontSize: textStyle.fontSize ? `${parseInt(textStyle.fontSize) * 0.9}px` : `${fontSize * 0.9}px`,
+                fontSize: textStyle.fontSize ? `${parseInt(textStyle.fontSize.replace("px", "")) * 0.9}px` : `${(typeof fontSize === "number" ? fontSize : 14) * 0.9}px`,
                 fontWeight: textStyle.fontWeight || "normal",
                 lineHeight: textStyle.lineHeight,
                 letterSpacing: textStyle.letterSpacing,
@@ -357,7 +373,7 @@ export function NewsWidget({ widget, isEditMode, onDelete, onConfigure, onDuplic
             <div 
               className="text-xs opacity-60 mt-2"
               style={{ 
-                fontSize: textStyle.fontSize ? `${parseInt(textStyle.fontSize) * 0.75}px` : undefined,
+                fontSize: textStyle.fontSize ? `${parseInt(textStyle.fontSize.replace("px", "")) * 0.75}px` : undefined,
               }}
             >
               {currentArticle.source}
@@ -455,14 +471,14 @@ export function NewsWidget({ widget, isEditMode, onDelete, onConfigure, onDuplic
         className="flex h-full w-full flex-col text-[var(--foreground)]"
         style={{ 
           color: textStyle.color || "var(--foreground)",
-          textAlign: textStyle.textAlign || "left",
+          textAlign: (textStyle.textAlign || "left") as "left" | "center" | "right" | "justify",
         }}
       >
         {showTitle && (
           <h3
             className="mb-3 font-semibold uppercase tracking-wide opacity-60"
             style={{ 
-              fontSize: textStyle.fontSize ? `${parseInt(textStyle.fontSize) * 0.9}px` : `${fontSize * 0.9}px`,
+              fontSize: textStyle.fontSize ? `${parseInt(textStyle.fontSize.replace("px", "")) * 0.9}px` : `${(typeof fontSize === "number" ? fontSize : 14) * 0.9}px`,
               fontWeight: textStyle.fontWeight || "600",
               lineHeight: textStyle.lineHeight,
               letterSpacing: textStyle.letterSpacing,

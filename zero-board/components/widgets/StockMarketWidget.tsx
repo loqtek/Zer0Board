@@ -36,13 +36,20 @@ export function StockMarketWidget({
   onDelete,
   onConfigure,
 }: StockMarketWidgetProps) {
-  const apiKey = widget.config?.apiKey;
-  const symbol = widget.config?.symbol || "AAPL";
-  const marketType = (widget.config?.marketType || "stock") as MarketType;
-  const template = (widget.config?.template || "compact") as DisplayTemplate;
-  const refreshInterval = widget.config?.refreshInterval || 60; // 60 seconds default
-  const fromCurrency = widget.config?.fromCurrency || "USD";
-  const toCurrency = widget.config?.toCurrency || "EUR";
+  const apiKeyRaw = widget.config?.apiKey;
+  const apiKey = typeof apiKeyRaw === "string" ? apiKeyRaw : undefined;
+  const symbolRaw = widget.config?.symbol;
+  const symbol = typeof symbolRaw === "string" ? symbolRaw : "AAPL";
+  const marketTypeRaw = widget.config?.marketType;
+  const marketType = (typeof marketTypeRaw === "string" && ["stock", "forex", "crypto"].includes(marketTypeRaw) ? marketTypeRaw : "stock") as MarketType;
+  const templateRaw = widget.config?.template;
+  const template = (typeof templateRaw === "string" && ["compact", "detailed", "minimal", "card"].includes(templateRaw) ? templateRaw : "compact") as DisplayTemplate;
+  const refreshIntervalRaw = widget.config?.refreshInterval;
+  const refreshInterval = typeof refreshIntervalRaw === "number" ? refreshIntervalRaw : 60; // 60 seconds default
+  const fromCurrencyRaw = widget.config?.fromCurrency;
+  const fromCurrency = typeof fromCurrencyRaw === "string" ? fromCurrencyRaw : "USD";
+  const toCurrencyRaw = widget.config?.toCurrency;
+  const toCurrency = typeof toCurrencyRaw === "string" ? toCurrencyRaw : "EUR";
 
   const [quote, setQuote] = useState<StockQuote | ForexQuote | null>(null);
   const [overview, setOverview] = useState<StockOverview | null>(null);

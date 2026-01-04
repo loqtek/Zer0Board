@@ -35,7 +35,8 @@ export function FitbitWidget({ widget, isEditMode, onDelete, onConfigure, onDupl
   const showWeeklyStats = widget.config?.showWeeklyStats === true;
   const showHeartRate = widget.config?.showHeartRate !== false;
   const metricUnit = widget.config?.metricUnit || "km"; // km or miles
-  const refreshInterval = widget.config?.refreshInterval || 300; // 5 minutes default
+  const refreshIntervalRaw = widget.config?.refreshInterval;
+  const refreshInterval = typeof refreshIntervalRaw === "number" ? refreshIntervalRaw : 300; // 5 minutes default
 
   const [stats, setStats] = useState<FitbitStats | null>(null);
   const [isLoading, setIsLoading] = useState(false);

@@ -28,11 +28,22 @@ export interface BookmarkGroupData {
 
 export function BookmarkWidget({ widget, isEditMode, onDelete, onConfigure }: BookmarkWidgetProps) {
   const config = widget.config || {};
-  const groups: BookmarkGroupData[] = (config.groups || []).filter((g: { id?: string } | null | undefined): g is { id: string } => g !== null && g !== undefined && typeof g === "object" && "id" in g && typeof g.id === "string");
-  const themeType = config.themeType || "default";
+  const groupsArray = config.groups;
+  const groups: BookmarkGroupData[] = Array.isArray(groupsArray)
+    ? groupsArray.filter((g: unknown): g is BookmarkGroupData => {
+        if (!g || typeof g !== "object") return false;
+        const group = g as Record<string, unknown>;
+        return (
+          typeof group.id === "string" &&
+          typeof group.name === "string" &&
+          Array.isArray(group.bookmarks)
+        );
+      })
+    : [];
+  const themeType = typeof config.themeType === "string" ? config.themeType : "default";
 
-  const defaultBorderColor = config.defaultBorderColor || "var(--border)";
-  const defaultTextColor = config.defaultTextColor || "var(--foreground)";
+  const defaultBorderColor = typeof config.defaultBorderColor === "string" ? config.defaultBorderColor : "var(--border)";
+  const defaultTextColor = typeof config.defaultTextColor === "string" ? config.defaultTextColor : "var(--foreground)";
 
   return (
     <WidgetWrapper

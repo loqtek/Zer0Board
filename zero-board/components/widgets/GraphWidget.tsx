@@ -16,20 +16,30 @@ interface GraphWidgetProps {
 }
 
 export function GraphWidget({ widget, isEditMode, onDelete, onConfigure, onDuplicate }: GraphWidgetProps) {
-  const title = widget.config?.title || "Data Graph";
+  const titleRaw = widget.config?.title;
+  const title = typeof titleRaw === "string" ? titleRaw : "Data Graph";
   const chartType = widget.config?.chartType || (widget.type === "metric" ? "metric" : "line");
   const useManualData = widget.config?.useManualData === true || !widget.config?.apiUrl;
-  const manualDataPoints = widget.config?.dataPoints || [65, 70, 68, 75, 80, 78, 85];
+  const manualDataPointsRaw = widget.config?.dataPoints;
+  const manualDataPoints = Array.isArray(manualDataPointsRaw) ? manualDataPointsRaw : [65, 70, 68, 75, 80, 78, 85];
   
   // API configuration
-  const apiUrl = widget.config?.apiUrl;
-  const apiMethod = widget.config?.apiMethod || "GET";
-  const apiHeaders = widget.config?.apiHeaders;
-  const apiBody = widget.config?.apiBody;
-  const dataPath = widget.config?.dataPath;
-  const xField = widget.config?.xField;
-  const yField = widget.config?.yField;
-  const refreshInterval = widget.config?.refreshInterval || 0;
+  const apiUrlRaw = widget.config?.apiUrl;
+  const apiUrl = typeof apiUrlRaw === "string" ? apiUrlRaw : undefined;
+  const apiMethodRaw = widget.config?.apiMethod;
+  const apiMethod = typeof apiMethodRaw === "string" ? apiMethodRaw : "GET";
+  const apiHeadersRaw = widget.config?.apiHeaders;
+  const apiHeaders = typeof apiHeadersRaw === "string" ? apiHeadersRaw : undefined;
+  const apiBodyRaw = widget.config?.apiBody;
+  const apiBody = typeof apiBodyRaw === "string" ? apiBodyRaw : undefined;
+  const dataPathRaw = widget.config?.dataPath;
+  const dataPath = typeof dataPathRaw === "string" ? dataPathRaw : undefined;
+  const xFieldRaw = widget.config?.xField;
+  const xField = typeof xFieldRaw === "string" ? xFieldRaw : undefined;
+  const yFieldRaw = widget.config?.yField;
+  const yField = typeof yFieldRaw === "string" ? yFieldRaw : undefined;
+  const refreshIntervalRaw = widget.config?.refreshInterval;
+  const refreshInterval = typeof refreshIntervalRaw === "number" ? refreshIntervalRaw : 0;
 
   const [apiData, setApiData] = useState<ApiDataPoint[]>([]);
   const [isLoading, setIsLoading] = useState(false);

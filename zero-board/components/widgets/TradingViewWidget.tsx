@@ -35,13 +35,20 @@ export function TradingViewWidget({
   onDelete,
   onConfigure,
 }: TradingViewWidgetProps) {
-  const widgetUrl = widget.config?.widgetUrl;
-  const symbol = widget.config?.symbol || "NASDAQ:AAPL";
-  const widgetType = (widget.config?.widgetType || "symbol-overview") as WidgetType;
-  const height = widget.config?.height || 400;
-  const width = widget.config?.width || "100%";
-  const theme = widget.config?.theme || "light";
-  const locale = widget.config?.locale || "en";
+  const widgetUrlRaw = widget.config?.widgetUrl;
+  const widgetUrl = typeof widgetUrlRaw === "string" ? widgetUrlRaw : undefined;
+  const symbolRaw = widget.config?.symbol;
+  const symbol = typeof symbolRaw === "string" ? symbolRaw : "NASDAQ:AAPL";
+  const widgetTypeRaw = widget.config?.widgetType;
+  const widgetType = (typeof widgetTypeRaw === "string" && ["symbol-overview", "mini-chart", "ticker-tape", "market-overview"].includes(widgetTypeRaw) ? widgetTypeRaw : "symbol-overview") as WidgetType;
+  const heightRaw = widget.config?.height;
+  const height = typeof heightRaw === "number" ? heightRaw : 400;
+  const widthRaw = widget.config?.width;
+  const width = typeof widthRaw === "string" || typeof widthRaw === "number" ? String(widthRaw) : "100%";
+  const themeRaw = widget.config?.theme;
+  const theme = typeof themeRaw === "string" ? themeRaw : "light";
+  const localeRaw = widget.config?.locale;
+  const locale = typeof localeRaw === "string" ? localeRaw : "en";
 
   const containerRef = useRef<HTMLDivElement>(null);
   const scriptLoadedRef = useRef(false);
@@ -64,7 +71,7 @@ export function TradingViewWidget({
     }
 
     function createWidget() {
-      if (!containerRef.current || !window.TradingView) return;
+      if (!containerRef.current || !window.TradingView || !window.TradingView.widget) return;
 
       // Clear container
       containerRef.current.innerHTML = "";

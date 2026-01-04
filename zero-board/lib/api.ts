@@ -100,7 +100,25 @@ api.interceptors.response.use(
   }
 );
 
-// Types - exported from lib/types/api.ts
+// Types - imported from lib/types/api.ts
+import type {
+  User,
+  BoardSettings,
+  Board,
+  Widget,
+  BoardDetail,
+  LoginRequest,
+  LoginResponse,
+  ChangePasswordRequest,
+  Integration,
+  WidgetTemplate,
+  BoardAccessToken,
+  BoardAccessTokenCreate,
+  BoardAccessTokenCreateResponse,
+  BoardAccessTokenUpdate,
+} from "@/lib/types/api";
+
+// Re-export types for convenience
 export type {
   User,
   BoardSettings,

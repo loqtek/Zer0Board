@@ -12,8 +12,10 @@ interface QRCodeWidgetProps {
 }
 
 export function QRCodeWidget({ widget, isEditMode, onDelete, onConfigure }: QRCodeWidgetProps) {
-  const link = widget.config?.link || widget.config?.data || "https://example.com";
-  const size = widget.config?.size || 150;
+  const linkRaw = widget.config?.link || widget.config?.data;
+  const link = typeof linkRaw === "string" ? linkRaw : "https://example.com";
+  const sizeRaw = widget.config?.size;
+  const size = typeof sizeRaw === "number" ? sizeRaw : 150;
 
   return (
     <WidgetWrapper widget={widget} isEditMode={isEditMode} onDelete={onDelete} onConfigure={onConfigure}>

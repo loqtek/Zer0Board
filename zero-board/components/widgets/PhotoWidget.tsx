@@ -12,11 +12,14 @@ interface PhotoWidgetProps {
 }
 
 export function PhotoWidget({ widget, isEditMode, onDelete, onConfigure }: PhotoWidgetProps) {
-  const photos = widget.config?.photos || [
+  const photosRaw = widget.config?.photos;
+  const defaultPhotos = [
     { url: "https://via.placeholder.com/300x200?text=Photo+1", title: "Photo 1" },
     { url: "https://via.placeholder.com/300x200?text=Photo+2", title: "Photo 2" },
   ];
-  const currentPhotoIndex = widget.config?.currentPhotoIndex || 0;
+  const photos = Array.isArray(photosRaw) ? photosRaw : defaultPhotos;
+  const currentPhotoIndexRaw = widget.config?.currentPhotoIndex;
+  const currentPhotoIndex = typeof currentPhotoIndexRaw === "number" ? currentPhotoIndexRaw : 0;
   const currentPhoto = photos[currentPhotoIndex] || photos[0];
 
   return (

@@ -20,6 +20,18 @@ interface WidgetConfigDialogProps {
   onClose: () => void;
 }
 
+// Helper function to safely get string config values
+function getStringConfig(config: Record<string, unknown>, key: string, defaultValue: string = ""): string {
+  const value = config[key];
+  return typeof value === "string" ? value : defaultValue;
+}
+
+// Helper function to safely get number config values
+function getNumberConfig(config: Record<string, unknown>, key: string, defaultValue: number = 0): number {
+  const value = config[key];
+  return typeof value === "number" ? value : defaultValue;
+}
+
 export function WidgetConfigDialog({ widget, onClose }: WidgetConfigDialogProps) {
   const queryClient = useQueryClient();
   const [config, setConfig] = useState(widget.config || {});
@@ -174,7 +186,7 @@ export function WidgetConfigDialog({ widget, onClose }: WidgetConfigDialogProps)
                     Theme Type
                   </label>
                   <select
-                    value={config.themeType || "default"}
+                    value={typeof config.themeType === "string" ? config.themeType : "default"}
                     onChange={(e) => setConfig({ ...config, themeType: e.target.value })}
                     className="w-full rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 py-2 text-[var(--foreground)]"
                   >
@@ -183,9 +195,9 @@ export function WidgetConfigDialog({ widget, onClose }: WidgetConfigDialogProps)
                     <option value="clear">Clear (Transparent)</option>
                   </select>
                   <p className="mt-1 text-xs text-[var(--text-muted)]">
-                    {config.themeType === "glass" && "Semi-transparent with blur effect"}
-                    {config.themeType === "clear" && "Transparent with slight blur for readability"}
-                    {(!config.themeType || config.themeType === "default") && "Standard solid background"}
+                    {typeof config.themeType === "string" && config.themeType === "glass" && "Semi-transparent with blur effect"}
+                    {typeof config.themeType === "string" && config.themeType === "clear" && "Transparent with slight blur for readability"}
+                    {(!config.themeType || (typeof config.themeType === "string" && config.themeType === "default")) && "Standard solid background"}
                   </p>
                 </div>
               </div>
@@ -198,7 +210,7 @@ export function WidgetConfigDialog({ widget, onClose }: WidgetConfigDialogProps)
                     Custom CSS (Advanced)
                   </label>
                   <textarea
-                    value={config.customCSS || ""}
+                    value={typeof config.customCSS === "string" ? config.customCSS : ""}
                     onChange={(e) => setConfig({ ...config, customCSS: e.target.value })}
                     placeholder="background-color: rgba(255, 0, 0, 0.1); border-radius: 12px;"
                     className="w-full rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 py-2 text-[var(--foreground)] font-mono text-sm min-h-[100px]"
@@ -222,7 +234,7 @@ export function WidgetConfigDialog({ widget, onClose }: WidgetConfigDialogProps)
                     </label>
                     <input
                       type="number"
-                      value={config.fontSize || ""}
+                      value={getStringConfig(config, "fontSize", "")}
                       onChange={(e) => setConfig({ ...config, fontSize: e.target.value ? parseInt(e.target.value) : undefined })}
                       placeholder="Auto"
                       min="8"
@@ -240,7 +252,7 @@ export function WidgetConfigDialog({ widget, onClose }: WidgetConfigDialogProps)
                       Font Weight
                     </label>
                     <select
-                      value={config.fontWeight || "normal"}
+                      value={getStringConfig(config, "fontWeight", "normal")}
                       onChange={(e) => setConfig({ ...config, fontWeight: e.target.value })}
                       className="w-full rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 py-2 text-[var(--foreground)]"
                     >
@@ -261,7 +273,7 @@ export function WidgetConfigDialog({ widget, onClose }: WidgetConfigDialogProps)
                     <input
                       type="number"
                       step="0.1"
-                      value={config.lineHeight || ""}
+                      value={getStringConfig(config, "lineHeight", "")}
                       onChange={(e) => setConfig({ ...config, lineHeight: e.target.value ? parseFloat(e.target.value) : undefined })}
                       placeholder="Auto"
                       min="0.5"
@@ -281,7 +293,7 @@ export function WidgetConfigDialog({ widget, onClose }: WidgetConfigDialogProps)
                     <input
                       type="number"
                       step="0.1"
-                      value={config.letterSpacing || ""}
+                      value={getStringConfig(config, "letterSpacing", "")}
                       onChange={(e) => setConfig({ ...config, letterSpacing: e.target.value ? parseFloat(e.target.value) : undefined })}
                       placeholder="Normal"
                       min="-2"
@@ -300,13 +312,13 @@ export function WidgetConfigDialog({ widget, onClose }: WidgetConfigDialogProps)
                     <div className="flex gap-2">
                       <input
                         type="color"
-                        value={config.textColor || "#ffffff"}
+                        value={getStringConfig(config, "textColor", "#ffffff")}
                         onChange={(e) => setConfig({ ...config, textColor: e.target.value })}
                         className="w-12 h-10 rounded border border-[var(--input-border)] cursor-pointer"
                       />
                       <input
                         type="text"
-                        value={config.textColor || ""}
+                        value={getStringConfig(config, "textColor", "")}
                         onChange={(e) => setConfig({ ...config, textColor: e.target.value })}
                         placeholder="var(--foreground)"
                         className="flex-1 rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 py-2 text-[var(--foreground)]"
@@ -323,7 +335,7 @@ export function WidgetConfigDialog({ widget, onClose }: WidgetConfigDialogProps)
                       Text Alignment
                     </label>
                     <select
-                      value={config.textAlign || "left"}
+                      value={getStringConfig(config, "textAlign", "left")}
                       onChange={(e) => setConfig({ ...config, textAlign: e.target.value })}
                       className="w-full rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 py-2 text-[var(--foreground)]"
                     >
@@ -341,7 +353,7 @@ export function WidgetConfigDialog({ widget, onClose }: WidgetConfigDialogProps)
                     Text Transform
                   </label>
                   <select
-                    value={config.textTransform || "none"}
+                    value={getStringConfig(config, "textTransform", "none")}
                     onChange={(e) => setConfig({ ...config, textTransform: e.target.value })}
                     className="w-full rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 py-2 text-[var(--foreground)]"
                   >
@@ -406,7 +418,7 @@ function ClockConfigForm({
       <div>
         <label className="block text-sm font-medium mb-2">Display Format</label>
         <select
-          value={config.format || "digital"}
+          value={getStringConfig(config, "format", "digital")}
           onChange={(e) => setConfig({ ...config, format: e.target.value })}
           className="w-full rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 py-2 text-[var(--foreground)]"
         >
@@ -455,7 +467,7 @@ function ClockConfigForm({
         <div>
           <label className="block text-sm font-medium mb-2">Time Format</label>
           <select
-            value={config.hourFormat || "24"}
+            value={getStringConfig(config, "hourFormat", "24")}
             onChange={(e) => setConfig({ ...config, hourFormat: e.target.value })}
             className="w-full rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 py-2 text-[var(--foreground)]"
           >
@@ -488,7 +500,7 @@ function ClockConfigForm({
         <div>
           <label className="block text-sm font-medium mb-2">Date Format</label>
           <select
-            value={config.dateFormat || "long"}
+            value={getStringConfig(config, "dateFormat", "long")}
             onChange={(e) => setConfig({ ...config, dateFormat: e.target.value })}
             className="w-full rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 py-2 text-[var(--foreground)]"
           >
@@ -508,7 +520,7 @@ function ClockConfigForm({
         <label className="block text-sm font-medium mb-2">Timezone</label>
         <Input
           type="text"
-          value={config.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone}
+          value={getStringConfig(config, "timezone", Intl.DateTimeFormat().resolvedOptions().timeZone)}
           onChange={(e) => setConfig({ ...config, timezone: e.target.value })}
           placeholder="America/New_York"
         />
@@ -520,7 +532,7 @@ function ClockConfigForm({
       <div>
         <label className="block text-sm font-medium mb-2">Font Size</label>
         <select
-          value={config.fontSize || "auto"}
+          value={getStringConfig(config, "fontSize", "auto")}
           onChange={(e) => setConfig({ ...config, fontSize: e.target.value })}
           className="w-full rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 py-2 text-[var(--foreground)]"
         >
@@ -551,23 +563,25 @@ function WeatherConfigForm({
       <div>
         <label className="block text-sm font-medium mb-2">Location</label>
         <Autocomplete
-          value={config.location || ""}
+          value={getStringConfig(config, "location", "")}
           onChange={(value) => setConfig({ ...config, location: value })}
-          onSelect={(location: LocationSuggestion) => {
+          onSelect={(location: unknown) => {
+            const loc = location as LocationSuggestion;
             setConfig({
               ...config,
-              location: `${location.name}${location.admin1 ? `, ${location.admin1}` : ""}, ${location.country}`,
-              latitude: location.latitude,
-              longitude: location.longitude,
+              location: `${loc.name}${loc.admin1 ? `, ${loc.admin1}` : ""}, ${loc.country}`,
+              latitude: loc.latitude,
+              longitude: loc.longitude,
             });
           }}
           fetchSuggestions={searchLocations}
-          getDisplayValue={(item: LocationSuggestion) => 
-            `${item.name}${item.admin1 ? `, ${item.admin1}` : ""}, ${item.country}`
-          }
+          getDisplayValue={(item: unknown) => {
+            const loc = item as LocationSuggestion;
+            return `${loc.name}${loc.admin1 ? `, ${loc.admin1}` : ""}, ${loc.country}`;
+          }}
           placeholder="Search for a city..."
         />
-        {config.latitude && config.longitude && (
+        {typeof config.latitude === "number" && typeof config.longitude === "number" && (
           <p className="text-xs text-green-600 dark:text-green-400 mt-1">
             ✓ Location configured (Lat: {config.latitude.toFixed(2)}, Lon: {config.longitude.toFixed(2)})
           </p>
@@ -578,7 +592,7 @@ function WeatherConfigForm({
       <div>
         <label className="block text-sm font-medium mb-2">Temperature Unit</label>
         <select
-          value={config.unit || "fahrenheit"}
+          value={getStringConfig(config, "unit", "fahrenheit")}
           onChange={(e) => setConfig({ ...config, unit: e.target.value })}
           className="w-full rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 py-2 text-[var(--foreground)]"
         >
@@ -646,19 +660,20 @@ function NewsConfigForm({
   const [useCustomHeadlines, setUseCustomHeadlines] = useState(
     config.useCustomHeadlines === true
   );
+  const headlinesRaw = config.headlines;
   const [headlines, setHeadlines] = useState<string[]>(
-    config.headlines || []
+    Array.isArray(headlinesRaw) ? headlinesRaw : []
   );
 
   const headlinesStr = JSON.stringify(headlines);
 
   useEffect(() => {
-    setConfig((prevConfig: Record<string, unknown>) => ({ 
-      ...prevConfig, 
+    setConfig({ 
+      ...config, 
       headlines, 
       useCustomHeadlines,
-    }));
-  }, [headlinesStr, useCustomHeadlines, setConfig]);
+    });
+  }, [headlinesStr, useCustomHeadlines, config, setConfig]);
 
   const addHeadline = () => {
     setHeadlines([...headlines, ""]);
@@ -684,7 +699,7 @@ function NewsConfigForm({
         <div className="mb-4">
           <label className="block text-sm font-medium mb-2">Display Style</label>
           <select
-            value={config.displayStyle || "list"}
+            value={getStringConfig(config, "displayStyle", "list")}
             onChange={(e) => setConfig({ ...config, displayStyle: e.target.value })}
             className="w-full rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 py-2 text-[var(--foreground)]"
           >
@@ -744,7 +759,7 @@ function NewsConfigForm({
               </label>
               <Input
                 type="password"
-                value={config.newsApiKey || ""}
+                value={getStringConfig(config, "newsApiKey", "")}
                 onChange={(e) => setConfig({ ...config, newsApiKey: e.target.value })}
                 placeholder="Enter NewsAPI key (get free key at newsapi.org)"
               />
@@ -759,7 +774,7 @@ function NewsConfigForm({
               </label>
               <Input
                 type="url"
-                value={config.customRssUrl || ""}
+                value={getStringConfig(config, "customRssUrl", "")}
                 onChange={(e) => setConfig({ ...config, customRssUrl: e.target.value })}
                 placeholder="https://example.com/feed.xml"
               />
@@ -784,8 +799,9 @@ function NewsRssFeedsTab({
 }) {
   const [selectedFeedRegion, setSelectedFeedRegion] = useState<string>("");
   const [selectedFeedCategory, setSelectedFeedCategory] = useState<string>("");
+  const rssFeedIdsRaw = config.rssFeedIds;
   const [selectedFeedIds, setSelectedFeedIds] = useState<string[]>(
-    config.rssFeedIds || []
+    Array.isArray(rssFeedIdsRaw) ? rssFeedIdsRaw : []
   );
 
   // Fetch integrations to get custom RSS feeds
@@ -807,11 +823,11 @@ function NewsRssFeedsTab({
   );
 
   useEffect(() => {
-    setConfig((prevConfig: Record<string, unknown>) => ({ 
-      ...prevConfig, 
+    setConfig({ 
+      ...config, 
       rssFeedIds: selectedFeedIds,
-    }));
-  }, [selectedFeedIds, setConfig]);
+    });
+  }, [selectedFeedIds, config, setConfig]);
 
   const toggleFeedSelection = (feedId: string) => {
     setSelectedFeedIds((prev) =>
@@ -990,7 +1006,7 @@ function NewsDisplayOptionsTab({
               </label>
               <input
                 type="number"
-                value={config.descriptionLength || 150}
+                value={getNumberConfig(config, "descriptionLength", 150)}
                 onChange={(e) => setConfig({ ...config, descriptionLength: e.target.value ? parseInt(e.target.value) : 150 })}
                 placeholder="150"
                 min="0"
@@ -1028,7 +1044,7 @@ function QRCodeConfigForm({
           </label>
           <Input
             type="text"
-            value={config.link || config.data || ""}
+            value={getStringConfig(config, "link") || getStringConfig(config, "data", "")}
             onChange={(e) => setConfig({ ...config, link: e.target.value, data: e.target.value })}
             placeholder="https://example.com or any text"
           />
@@ -1042,7 +1058,7 @@ function QRCodeConfigForm({
           </label>
           <Input
             type="number"
-            value={config.size || 150}
+            value={getNumberConfig(config, "size", 150)}
             onChange={(e) => setConfig({ ...config, size: parseInt(e.target.value) || 150 })}
             placeholder="150"
             min="50"
@@ -1067,20 +1083,21 @@ function GraphConfigForm({
   config: Record<string, unknown>;
   setConfig: (config: Record<string, unknown>) => void;
 }) {
+  const dataPointsRaw = config.dataPoints;
   const [manualDataPoints, setManualDataPoints] = useState<number[]>(
-    config.dataPoints || [65, 70, 68, 75, 80, 78, 85]
+    Array.isArray(dataPointsRaw) ? dataPointsRaw : [65, 70, 68, 75, 80, 78, 85]
   );
   const [useManualData, setUseManualData] = useState(
     config.useManualData === true || !config.apiUrl
   );
 
   useEffect(() => {
-    setConfig((prevConfig: Record<string, unknown>) => ({
-      ...prevConfig,
+    setConfig({
+      ...config,
       dataPoints: manualDataPoints,
       useManualData,
-    }));
-  }, [manualDataPoints, useManualData, setConfig]);
+    });
+  }, [manualDataPoints, useManualData, config, setConfig]);
 
   const addDataPoint = () => {
     setManualDataPoints([...manualDataPoints, 0]);
@@ -1109,7 +1126,7 @@ function GraphConfigForm({
           <label className="block text-sm font-medium mb-2">Title</label>
           <Input
             type="text"
-            value={config.title || ""}
+            value={getStringConfig(config, "title", "")}
             onChange={(e) => setConfig({ ...config, title: e.target.value })}
             placeholder="Data Graph"
           />
@@ -1118,7 +1135,7 @@ function GraphConfigForm({
         <div className="mt-4">
           <label className="block text-sm font-medium mb-2">Chart Type</label>
           <select
-            value={config.chartType || defaultChartType}
+            value={getStringConfig(config, "chartType", defaultChartType)}
             onChange={(e) => setConfig({ ...config, chartType: e.target.value })}
             className="w-full rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 py-2 text-[var(--foreground)]"
           >
@@ -1174,7 +1191,7 @@ function GraphConfigForm({
               <label className="block text-sm font-medium mb-2">API URL</label>
               <Input
                 type="url"
-                value={config.apiUrl || ""}
+                value={getStringConfig(config, "apiUrl", "")}
                 onChange={(e) => setConfig({ ...config, apiUrl: e.target.value })}
                 placeholder="https://api.example.com/data"
               />
@@ -1186,7 +1203,7 @@ function GraphConfigForm({
             <div className="mt-4">
               <label className="block text-sm font-medium mb-2">HTTP Method</label>
               <select
-                value={config.apiMethod || "GET"}
+                value={getStringConfig(config, "apiMethod", "GET")}
                 onChange={(e) => setConfig({ ...config, apiMethod: e.target.value })}
                 className="w-full rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 py-2 text-[var(--foreground)]"
               >
@@ -1225,7 +1242,7 @@ function GraphConfigForm({
                   Request Body (Optional)
                 </label>
                 <textarea
-                  value={config.apiBody || ""}
+                  value={getStringConfig(config, "apiBody", "")}
                   onChange={(e) => setConfig({ ...config, apiBody: e.target.value })}
                   placeholder='{"key": "value"}'
                   className="w-full rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 py-2 text-[var(--foreground)] font-mono text-xs"
@@ -1240,7 +1257,7 @@ function GraphConfigForm({
               </label>
               <Input
                 type="text"
-                value={config.dataPath || ""}
+                value={getStringConfig(config, "dataPath", "")}
                 onChange={(e) => setConfig({ ...config, dataPath: e.target.value })}
                 placeholder="data.values or results"
               />
@@ -1254,7 +1271,7 @@ function GraphConfigForm({
                 <label className="block text-sm font-medium mb-2">X Field Name</label>
                 <Input
                   type="text"
-                  value={config.xField || ""}
+                  value={getStringConfig(config, "xField", "")}
                   onChange={(e) => setConfig({ ...config, xField: e.target.value })}
                   placeholder="name, date, label"
                 />
@@ -1266,7 +1283,7 @@ function GraphConfigForm({
                 <label className="block text-sm font-medium mb-2">Y Field Name</label>
                 <Input
                   type="text"
-                  value={config.yField || ""}
+                  value={getStringConfig(config, "yField", "")}
                   onChange={(e) => setConfig({ ...config, yField: e.target.value })}
                   placeholder="value, count, amount"
                 />
@@ -1282,7 +1299,7 @@ function GraphConfigForm({
               </label>
               <Input
                 type="number"
-                value={config.refreshInterval || 0}
+                value={getNumberConfig(config, "refreshInterval", 0)}
                 onChange={(e) => setConfig({ ...config, refreshInterval: parseInt(e.target.value) || 0 })}
                 placeholder="0 (no refresh)"
                 min="0"
@@ -1353,7 +1370,7 @@ function FitbitConfigForm({
           <div>
             <label className="block text-sm font-medium mb-2">Distance Unit</label>
             <select
-              value={config.metricUnit || "km"}
+              value={getStringConfig(config, "metricUnit", "km")}
               onChange={(e) => setConfig({ ...config, metricUnit: e.target.value })}
               className="w-full rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 py-2 text-[var(--foreground)]"
             >
@@ -1366,7 +1383,7 @@ function FitbitConfigForm({
             <label className="block text-sm font-medium mb-2">Refresh Interval (seconds)</label>
             <Input
               type="number"
-              value={config.refreshInterval || 300}
+              value={getNumberConfig(config, "refreshInterval", 300)}
               onChange={(e) => setConfig({ ...config, refreshInterval: parseInt(e.target.value) || 300 })}
               placeholder="300"
               min="60"
@@ -1410,7 +1427,7 @@ function EmailConfigForm({
         <div>
           <label className="block text-sm font-medium mb-2">Email Account</label>
           <select
-            value={config.emailIntegrationId || ""}
+            value={getStringConfig(config, "emailIntegrationId", "")}
             onChange={(e) => setConfig({ ...config, emailIntegrationId: parseInt(e.target.value) || undefined })}
             className="w-full rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 py-2 text-[var(--foreground)]"
           >
@@ -1430,7 +1447,7 @@ function EmailConfigForm({
           <label className="block text-sm font-medium mb-2">Max Emails to Show</label>
           <Input
             type="number"
-            value={config.maxEmails || 10}
+            value={getNumberConfig(config, "maxEmails", 10)}
             onChange={(e) => setConfig({ ...config, maxEmails: parseInt(e.target.value) || 10 })}
             placeholder="10"
             min="1"
@@ -1458,7 +1475,7 @@ function EmailConfigForm({
             <label className="block text-sm font-medium mb-2">Preview Length (characters)</label>
             <Input
               type="number"
-              value={config.previewLength || 50}
+              value={getNumberConfig(config, "previewLength", 50)}
               onChange={(e) => setConfig({ ...config, previewLength: parseInt(e.target.value) || 50 })}
               placeholder="50"
               min="0"
@@ -1474,7 +1491,7 @@ function EmailConfigForm({
           <label className="block text-sm font-medium mb-2">Refresh Interval (seconds)</label>
           <Input
             type="number"
-            value={config.refreshInterval || 300}
+            value={getNumberConfig(config, "refreshInterval", 300)}
             onChange={(e) => setConfig({ ...config, refreshInterval: parseInt(e.target.value) || 300 })}
             placeholder="300"
             min="60"
@@ -1506,21 +1523,24 @@ function HomeAssistantConfigForm({
   const { data: entities, isLoading: entitiesLoading } = useQuery({
     queryKey: ["home_assistant_entities", config.homeAssistantIntegrationId],
     queryFn: async () => {
-      if (!config.homeAssistantIntegrationId) return { entities: [] };
-      return await settingsApi.getHomeAssistantEntities(config.homeAssistantIntegrationId);
+      const integrationId = typeof config.homeAssistantIntegrationId === "number" ? config.homeAssistantIntegrationId : undefined;
+      if (!integrationId) return { entities: [] };
+      return await settingsApi.getHomeAssistantEntities(integrationId);
     },
-    enabled: !!config.homeAssistantIntegrationId,
+    enabled: typeof config.homeAssistantIntegrationId === "number",
   });
 
   const homeAssistantIntegrations = integrations?.filter(
     (i) => i.service === "home_assistant" && i.is_active
   ) || [];
 
-  const selectedEntities = config.entityIds || [];
+  const selectedEntitiesRaw = config.entityIds;
+  const selectedEntities = Array.isArray(selectedEntitiesRaw) ? selectedEntitiesRaw : [];
   const availableEntities = entities?.entities || [];
 
   const toggleEntity = (entityId: string) => {
-    const current = selectedEntities || [];
+    const selectedEntitiesRaw = config.entityIds;
+    const current = Array.isArray(selectedEntitiesRaw) ? selectedEntitiesRaw : [];
     if (current.includes(entityId)) {
       setConfig({ ...config, entityIds: current.filter((id: string) => id !== entityId) });
     } else {
@@ -1538,7 +1558,7 @@ function HomeAssistantConfigForm({
         <div>
           <label className="block text-sm font-medium mb-2">Home Assistant Integration</label>
           <select
-            value={config.homeAssistantIntegrationId || ""}
+            value={getStringConfig(config, "homeAssistantIntegrationId", "")}
             onChange={(e) => setConfig({ ...config, homeAssistantIntegrationId: parseInt(e.target.value) || undefined, entityIds: [] })}
             className="w-full rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 py-2 text-[var(--foreground)]"
           >
@@ -1554,7 +1574,7 @@ function HomeAssistantConfigForm({
           </p>
         </div>
 
-        {config.homeAssistantIntegrationId && (
+        {typeof config.homeAssistantIntegrationId === "number" && (
           <>
             <div className="mt-4">
               <label className="block text-sm font-medium mb-2">Select Entities</label>
@@ -1576,7 +1596,7 @@ function HomeAssistantConfigForm({
                         className="rounded border-[var(--input-border)]"
                       />
                       <span className="text-sm text-[var(--foreground)]">
-                        {entity.friendly_name} ({entity.entity_id})
+                        {entity.attributes?.friendly_name || entity.entity_id} ({entity.entity_id})
                       </span>
                     </label>
                   ))}
@@ -1605,7 +1625,7 @@ function HomeAssistantConfigForm({
             <div className="mt-4">
               <label className="block text-sm font-medium mb-2">Display Mode</label>
               <select
-                value={config.displayMode || "grid"}
+                value={getStringConfig(config, "displayMode", "grid")}
                 onChange={(e) => setConfig({ ...config, displayMode: e.target.value })}
                 className="w-full rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 py-2 text-[var(--foreground)]"
               >
@@ -1618,7 +1638,7 @@ function HomeAssistantConfigForm({
               <label className="block text-sm font-medium mb-2">Refresh Interval (seconds)</label>
               <Input
                 type="number"
-                value={config.refreshInterval || 30}
+                value={getNumberConfig(config, "refreshInterval", 30)}
                 onChange={(e) => setConfig({ ...config, refreshInterval: parseInt(e.target.value) || 30 })}
                 placeholder="30"
                 min="10"
@@ -1664,7 +1684,7 @@ function StockMarketConfigForm({
           <label className="block text-sm font-medium mb-2">Alpha Vantage API Key</label>
           <Input
             type="password"
-            value={config.apiKey || ""}
+            value={getStringConfig(config, "apiKey", "")}
             onChange={(e) => setConfig({ ...config, apiKey: e.target.value })}
             placeholder="Enter your Alpha Vantage API key"
           />
@@ -1676,7 +1696,7 @@ function StockMarketConfigForm({
         <div className="mt-4">
           <label className="block text-sm font-medium mb-2">Market Type</label>
           <select
-            value={config.marketType || "stock"}
+            value={getStringConfig(config, "marketType", "stock")}
             onChange={(e) => setConfig({ ...config, marketType: e.target.value })}
             className="w-full rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 py-2 text-[var(--foreground)]"
           >
@@ -1691,7 +1711,7 @@ function StockMarketConfigForm({
             <div className="mt-4">
               <label className="block text-sm font-medium mb-2">From Currency</label>
               <Input
-                value={config.fromCurrency || "USD"}
+                value={getStringConfig(config, "fromCurrency", "USD")}
                 onChange={(e) => setConfig({ ...config, fromCurrency: e.target.value.toUpperCase() })}
                 placeholder="USD"
                 maxLength={3}
@@ -1700,7 +1720,7 @@ function StockMarketConfigForm({
             <div className="mt-4">
               <label className="block text-sm font-medium mb-2">To Currency</label>
               <Input
-                value={config.toCurrency || "EUR"}
+                value={getStringConfig(config, "toCurrency", "EUR")}
                 onChange={(e) => setConfig({ ...config, toCurrency: e.target.value.toUpperCase() })}
                 placeholder="EUR"
                 maxLength={3}
@@ -1711,7 +1731,7 @@ function StockMarketConfigForm({
           <div className="mt-4">
             <label className="block text-sm font-medium mb-2">Symbol</label>
             <Input
-              value={config.symbol || "AAPL"}
+              value={getStringConfig(config, "symbol", "AAPL")}
               onChange={(e) => setConfig({ ...config, symbol: e.target.value.toUpperCase() })}
               placeholder="AAPL"
             />
@@ -1724,7 +1744,7 @@ function StockMarketConfigForm({
         <div className="mt-4">
           <label className="block text-sm font-medium mb-2">Display Template</label>
           <select
-            value={config.template || "compact"}
+            value={getStringConfig(config, "template", "compact")}
             onChange={(e) => setConfig({ ...config, template: e.target.value })}
             className="w-full rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 py-2 text-[var(--foreground)]"
           >
@@ -1742,7 +1762,7 @@ function StockMarketConfigForm({
           <label className="block text-sm font-medium mb-2">Refresh Interval (seconds)</label>
           <Input
             type="number"
-            value={config.refreshInterval || 60}
+            value={getNumberConfig(config, "refreshInterval", 60)}
             onChange={(e) => setConfig({ ...config, refreshInterval: parseInt(e.target.value) || 60 })}
             placeholder="60"
             min="30"
@@ -1776,7 +1796,7 @@ function TradingViewConfigForm({
         <div>
           <label className="block text-sm font-medium mb-2">Widget Type</label>
           <select
-            value={config.widgetType || "symbol-overview"}
+            value={getStringConfig(config, "widgetType", "symbol-overview")}
             onChange={(e) => setConfig({ ...config, widgetType: e.target.value })}
             className="w-full rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 py-2 text-[var(--foreground)]"
           >
@@ -1790,7 +1810,7 @@ function TradingViewConfigForm({
         <div className="mt-4">
           <label className="block text-sm font-medium mb-2">Symbol</label>
           <Input
-            value={config.symbol || "NASDAQ:AAPL"}
+            value={getStringConfig(config, "symbol", "NASDAQ:AAPL")}
             onChange={(e) => setConfig({ ...config, symbol: e.target.value })}
             placeholder="NASDAQ:AAPL"
           />
@@ -1803,7 +1823,7 @@ function TradingViewConfigForm({
           <label className="block text-sm font-medium mb-2">Or Custom Widget URL (Optional)</label>
           <Input
             type="url"
-            value={config.widgetUrl || ""}
+            value={getStringConfig(config, "widgetUrl", "")}
             onChange={(e) => setConfig({ ...config, widgetUrl: e.target.value })}
             placeholder="https://www.tradingview.com/widget/..."
           />
@@ -1816,7 +1836,7 @@ function TradingViewConfigForm({
           <label className="block text-sm font-medium mb-2">Height (pixels)</label>
           <Input
             type="number"
-            value={config.height || 400}
+            value={getNumberConfig(config, "height", 400)}
             onChange={(e) => setConfig({ ...config, height: parseInt(e.target.value) || 400 })}
             placeholder="400"
             min="200"
@@ -1827,7 +1847,7 @@ function TradingViewConfigForm({
         <div className="mt-4">
           <label className="block text-sm font-medium mb-2">Theme</label>
           <select
-            value={config.theme || "light"}
+            value={getStringConfig(config, "theme", "light")}
             onChange={(e) => setConfig({ ...config, theme: e.target.value })}
             className="w-full rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 py-2 text-[var(--foreground)]"
           >
@@ -1850,13 +1870,15 @@ function CalendarConfigForm({
   config: Record<string, unknown>;
   setConfig: (config: Record<string, unknown>) => void;
 }) {
+  const eventsRaw = config.events;
   const [events, setEvents] = useState<Array<{ title: string; date: string }>>(
-    config.events || []
+    Array.isArray(eventsRaw) ? eventsRaw : []
   );
   
   // Auto-detect calendar type from widget type if not set
-  const getDefaultCalendarType = () => {
-    if (config.calendarType) return config.calendarType;
+  const getDefaultCalendarType = (): string => {
+    const calendarTypeRaw = config.calendarType;
+    if (typeof calendarTypeRaw === "string") return calendarTypeRaw;
     if (widget.type === "google_calendar") return "google";
     if (widget.type === "microsoft_calendar") return "microsoft";
     return "local";
@@ -1868,8 +1890,10 @@ function CalendarConfigForm({
   );
   const [showTime, setShowTime] = useState(config.showTime !== false);
   const [showLocation, setShowLocation] = useState(config.showLocation !== false);
-  const [maxEvents, setMaxEvents] = useState(config.maxEvents || 5);
-  const [viewMode, setViewMode] = useState(config.viewMode || "upcoming");
+  const maxEventsRaw = config.maxEvents;
+  const [maxEvents, setMaxEvents] = useState(typeof maxEventsRaw === "number" ? maxEventsRaw : 5);
+  const viewModeRaw = config.viewMode;
+  const [viewMode, setViewMode] = useState(typeof viewModeRaw === "string" ? viewModeRaw : "upcoming");
 
   const { data: integrations } = useQuery({
     queryKey: ["integrations"],
@@ -1880,8 +1904,8 @@ function CalendarConfigForm({
   const eventsStr = JSON.stringify(events);
 
   useEffect(() => {
-    setConfig((prevConfig: Record<string, unknown>) => ({ 
-      ...prevConfig, 
+    setConfig({ 
+      ...config, 
       events, 
       calendarType, 
       useLocalEvents,
@@ -1889,8 +1913,8 @@ function CalendarConfigForm({
       showLocation,
       maxEvents,
       viewMode,
-    }));
-  }, [eventsStr, calendarType, useLocalEvents, showTime, showLocation, maxEvents, viewMode, setConfig]);
+    });
+  }, [eventsStr, calendarType, useLocalEvents, showTime, showLocation, maxEvents, viewMode, config, setConfig]);
 
   const addEvent = () => {
     setEvents([...events, { title: "", date: new Date().toISOString().split("T")[0] }]);
@@ -1952,7 +1976,7 @@ function CalendarConfigForm({
             <label className="block text-sm font-medium mb-2">iCal Feed URL</label>
             <Input
               type="url"
-              value={config.icalUrl || ""}
+              value={getStringConfig(config, "icalUrl", "")}
               onChange={(e) => setConfig({ ...config, icalUrl: e.target.value })}
               placeholder="https://calendar.google.com/calendar/ical/..."
             />
@@ -2087,7 +2111,7 @@ function NoteConfigForm({
       <div>
         <label className="block text-sm font-medium mb-2">Default Content</label>
         <textarea
-          value={config.defaultContent || ""}
+          value={getStringConfig(config, "defaultContent", "")}
           onChange={(e) => setConfig({ ...config, defaultContent: e.target.value })}
           className="w-full rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 py-2 text-[var(--foreground)] min-h-[100px]"
           placeholder="Default note content..."
@@ -2111,7 +2135,7 @@ function TodoConfigForm({
         <label className="block text-sm font-medium mb-2">Widget Title</label>
         <Input
           type="text"
-          value={config.title || "Todo List"}
+          value={getStringConfig(config, "title", "Todo List")}
           onChange={(e) => setConfig({ ...config, title: e.target.value })}
           placeholder="Todo List"
         />
@@ -2152,9 +2176,12 @@ function BookmarkConfigForm({
   config: Record<string, unknown>;
   setConfig: (config: Record<string, unknown>) => void;
 }) {
-  const groups = config.groups || [];
-  const defaultBorderColor = config.defaultBorderColor || "var(--border)";
-  const defaultTextColor = config.defaultTextColor || "var(--foreground)";
+  const groupsRaw = config.groups;
+  const groups = Array.isArray(groupsRaw) ? groupsRaw : [];
+  const defaultBorderColorRaw = config.defaultBorderColor;
+  const defaultBorderColor = typeof defaultBorderColorRaw === "string" ? defaultBorderColorRaw : "var(--border)";
+  const defaultTextColorRaw = config.defaultTextColor;
+  const defaultTextColor = typeof defaultTextColorRaw === "string" ? defaultTextColorRaw : "var(--foreground)";
 
   const addGroup = () => {
     const newGroup = {
@@ -2291,14 +2318,14 @@ function BookmarkConfigForm({
                 <div className="flex gap-1">
                   <input
                     type="color"
-                    value={group.borderColor?.startsWith("#") ? group.borderColor : defaultBorderColor.startsWith("#") ? defaultBorderColor : "#e5e7eb"}
+                    value={(typeof (group as Record<string, unknown>).borderColor === "string" && (group as Record<string, unknown>).borderColor?.toString().startsWith("#")) ? (group as Record<string, unknown>).borderColor?.toString() : defaultBorderColor.startsWith("#") ? defaultBorderColor : "#e5e7eb"}
                     onChange={(e) => updateGroup(group.id, { borderColor: e.target.value })}
                     className="w-8 h-8 rounded border border-[var(--input-border)] cursor-pointer"
                     title="Border Color"
                   />
                   <input
                     type="color"
-                    value={group.textColor?.startsWith("#") ? group.textColor : defaultTextColor.startsWith("#") ? defaultTextColor : "#ffffff"}
+                    value={(typeof (group as Record<string, unknown>).textColor === "string" && (group as Record<string, unknown>).textColor?.toString().startsWith("#")) ? (group as Record<string, unknown>).textColor?.toString() : defaultTextColor.startsWith("#") ? defaultTextColor : "#ffffff"}
                     onChange={(e) => updateGroup(group.id, { textColor: e.target.value })}
                     className="w-8 h-8 rounded border border-[var(--input-border)] cursor-pointer"
                     title="Text Color"

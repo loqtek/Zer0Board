@@ -12,11 +12,13 @@ interface SmartHomeWidgetProps {
 }
 
 export function SmartHomeWidget({ widget, isEditMode, onDelete, onConfigure }: SmartHomeWidgetProps) {
-  const devices = widget.config?.devices || [
+  const devicesRaw = widget.config?.devices;
+  const defaultDevices = [
     { name: "Living Room Lights", type: "light", status: "on", icon: Lightbulb },
     { name: "Thermostat", type: "thermostat", status: "72°F", icon: Thermometer },
     { name: "Front Door", type: "lock", status: "locked", icon: Lock },
   ];
+  const devices = Array.isArray(devicesRaw) ? devicesRaw : defaultDevices;
 
   return (
     <WidgetWrapper widget={widget} isEditMode={isEditMode} onDelete={onDelete} onConfigure={onConfigure}>
@@ -26,7 +28,7 @@ export function SmartHomeWidget({ widget, isEditMode, onDelete, onConfigure }: S
           <h3 className="font-semibold text-[var(--foreground)]">Smart Home</h3>
         </div>
         <div className="flex-1 space-y-2 overflow-y-auto">
-          {devices.map((device: { entity_id: string; attributes?: { friendly_name?: string }; state?: string; icon?: React.ComponentType<{ className?: string }> }, index: number) => {
+          {devices.map((device: { entity_id?: string; name?: string; type?: string; status?: string; attributes?: { friendly_name?: string }; state?: string; icon?: React.ComponentType<{ className?: string }> }, index: number) => {
             const Icon = device.icon || Lightbulb;
             return (
               <div

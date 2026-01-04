@@ -24,11 +24,15 @@ export function EmailWidget({ widget, isEditMode, onDelete, onConfigure, onDupli
   });
 
   // Widget customization options
-  const emailIntegrationId = widget.config?.emailIntegrationId;
-  const maxEmails = widget.config?.maxEmails || 10;
+  const emailIntegrationIdRaw = widget.config?.emailIntegrationId;
+  const emailIntegrationId = typeof emailIntegrationIdRaw === "number" ? emailIntegrationIdRaw : undefined;
+  const maxEmailsRaw = widget.config?.maxEmails;
+  const maxEmails = typeof maxEmailsRaw === "number" ? maxEmailsRaw : 10;
   const showPreview = widget.config?.showPreview !== false;
-  const previewLength = widget.config?.previewLength || 50;
-  const refreshInterval = widget.config?.refreshInterval || 300; // 5 minutes default
+  const previewLengthRaw = widget.config?.previewLength;
+  const previewLength = typeof previewLengthRaw === "number" ? previewLengthRaw : 50;
+  const refreshIntervalRaw = widget.config?.refreshInterval;
+  const refreshInterval = typeof refreshIntervalRaw === "number" ? refreshIntervalRaw : 300; // 5 minutes default
 
   const emailIntegration = integrations?.find(
     (i) => i.id === emailIntegrationId && i.service === "email" && i.is_active

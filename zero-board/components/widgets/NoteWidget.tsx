@@ -16,7 +16,8 @@ interface NoteWidgetProps {
 export function NoteWidget({ widget, isEditMode, onDelete, onConfigure }: NoteWidgetProps) {
   const [containerRef, setContainerRef] = useState<HTMLDivElement | null>(null);
   const { containerSize } = useContainerSize(containerRef, setContainerRef);
-  const [content, setContent] = useState(widget.config?.content || "");
+  const contentRaw = widget.config?.content;
+  const [content, setContent] = useState(typeof contentRaw === "string" ? contentRaw : "");
   const updateMutation = useWidgetUpdate(widget.board_id, widget.id);
 
   const themeType = widget.config?.themeType || "default";
