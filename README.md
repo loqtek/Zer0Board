@@ -17,16 +17,6 @@
 
 A Self-hosted digital board for displaying events, weather, news and other widgets. Works on small to large screens, portrait or landscape. Clean, customizable, secure, and responsive.
 
-## Project Structure
-
-```
-ZeroBoard/
-├── backend/          # FastAPI backend application
-├── zero-board/       # Next.js frontend application
-├── logs/             # Application logs
-└── docker-compose.yml
-```
-
 ## Quick Start
 
 ### Prerequisites
@@ -82,6 +72,16 @@ ZeroBoard/
 
 ### Local Development
 
+## Project Structure
+
+```
+ZeroBoard/
+├── backend/          # FastAPI backend application
+├── zero-board/       # Next.js frontend application
+├── logs/             # Application logs
+└── docker-compose.yml
+```
+
 #### Backend
 
 1. Navigate to backend directory:
@@ -92,7 +92,7 @@ ZeroBoard/
 2. Create virtual environment:
    ```bash
    python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   source venv/bin/activate
    ```
 
 3. Install dependencies:
