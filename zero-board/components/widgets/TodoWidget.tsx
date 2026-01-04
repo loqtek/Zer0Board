@@ -24,12 +24,19 @@ interface TodoItem {
 
 export function TodoWidget({ widget, isEditMode, onDelete, onConfigure }: TodoWidgetProps) {
   const queryClient = useQueryClient();
-  const [todos, setTodos] = useState<TodoItem[]>(widget.config?.todos || []);
+  const [todos, setTodos] = useState<TodoItem[]>(() => widget.config?.todos || []);
   const [newTodo, setNewTodo] = useState("");
 
   // Update local state when widget config changes
   useEffect(() => {
-    setTodos(widget.config?.todos || []);
+    const newTodos = widget.config?.todos || [];
+    setTodos((prevTodos) => {
+      // Only update if todos actually changed
+      if (JSON.stringify(prevTodos) !== JSON.stringify(newTodos)) {
+        return newTodos;
+      }
+      return prevTodos;
+    });
   }, [widget.config?.todos]);
 
   // Save todos to widget config

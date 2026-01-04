@@ -203,7 +203,7 @@ export function NewsWidget({ widget, isEditMode, onDelete, onConfigure, onDuplic
       className="flex-1 space-y-2 overflow-y-auto"
       style={{ textAlign: textStyle.textAlign || "left" }}
     >
-      {limitedArticles.map((article: any, index: number) => (
+      {limitedArticles.map((article: NewsArticle, index: number) => (
         <li
           key={index}
           className="border-l-2 border-[var(--accent)] pl-2 text-[var(--foreground)]"
@@ -248,7 +248,7 @@ export function NewsWidget({ widget, isEditMode, onDelete, onConfigure, onDuplic
       className="flex-1 overflow-y-auto grid grid-cols-2 gap-2"
       style={{ textAlign: textStyle.textAlign || "left" }}
     >
-      {limitedArticles.map((article: any, index: number) => (
+      {limitedArticles.map((article: NewsArticle, index: number) => (
         <div
           key={index}
           className="border border-[var(--input-border)] rounded p-2 hover:bg-[var(--input-bg)] transition-colors"
@@ -365,7 +365,7 @@ export function NewsWidget({ widget, isEditMode, onDelete, onConfigure, onDuplic
         </div>
         {limitedArticles.length > 1 && (
           <div className="flex gap-1 mt-4">
-            {limitedArticles.map((_article: any, idx: number) => (
+            {limitedArticles.map((_article: NewsArticle, idx: number) => (
               <button
                 key={idx}
                 onClick={() => setCarouselIndex(idx)}
@@ -400,7 +400,7 @@ export function NewsWidget({ widget, isEditMode, onDelete, onConfigure, onDuplic
       `}</style>
       <div className="absolute inset-0 flex items-center">
         <div className="news-ticker-animate whitespace-nowrap">
-          {limitedArticles.map((article: any, index: number) => (
+          {limitedArticles.map((article: NewsArticle, index: number) => (
             <span 
               key={index} 
               className="inline-block mr-8" 

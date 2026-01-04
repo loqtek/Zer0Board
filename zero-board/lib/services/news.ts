@@ -47,8 +47,15 @@ export async function getNewsHeadlines(
         const data = await response.json();
         if (data.articles) {
           return data.articles
-            .filter((article: any) => article.title)
-            .map((article: any) => ({
+            .filter((article: { title?: string }) => article.title)
+            .map((article: {
+              title: string;
+              description?: string;
+              url: string;
+              urlToImage?: string;
+              publishedAt?: string;
+              source?: { name?: string };
+            }) => ({
               title: article.title,
               description: article.description,
               url: article.url,
@@ -81,7 +88,12 @@ export async function getNewsFromRSS(customRssUrl?: string): Promise<NewsArticle
     const data = await response.json();
     
     if (data.items) {
-      return data.items.slice(0, 10).map((item: any) => ({
+      return data.items.slice(0, 10).map((item: {
+        title: string;
+        description?: string;
+        link: string;
+        pubDate?: string;
+      }) => ({
         title: item.title,
         description: item.description,
         url: item.link,
@@ -110,7 +122,12 @@ export async function getNewsFromMultipleRSS(rssUrls: string[]): Promise<NewsArt
         const data = await response.json();
         
         if (data.items) {
-          return data.items.map((item: any) => ({
+          return data.items.map((item: {
+            title: string;
+            description?: string;
+            link: string;
+            pubDate?: string;
+          }) => ({
             title: item.title,
             description: item.description,
             url: item.link,

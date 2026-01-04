@@ -5,7 +5,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth";
 import { useTheme } from "@/lib/theme";
-import { boardsApi, widgetsApi, type BoardDetail } from "@/lib/api";
+import { boardsApi, widgetsApi, type Board } from "@/lib/api";
 import { getErrorMessage } from "@/lib/utils/errors";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -68,7 +68,7 @@ export default function DashboardPage() {
   });
 
   const updateBoardMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: { layout_config?: Record<string, any> } }) =>
+    mutationFn: ({ id, data }: { id: number; data: { layout_config?: Record<string, unknown> } }) =>
       boardsApi.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["boards"] });
@@ -86,7 +86,7 @@ export default function DashboardPage() {
     }
   }, [authLoading, isAuthenticated, router]);
 
-  const toggleFullscreen = (board: any, e: React.MouseEvent) => {
+  const toggleFullscreen = (board: Board, e: React.MouseEvent) => {
     e.stopPropagation();
     const currentConfig = board.layout_config || {};
     const newFullscreen = !currentConfig.fullscreen;
@@ -102,7 +102,7 @@ export default function DashboardPage() {
     });
   };
 
-  const toggleLockout = async (board: any, e: React.MouseEvent) => {
+  const toggleLockout = async (board: Board, e: React.MouseEvent) => {
     e.stopPropagation();
     const currentLockout = board.settings?.lockout_mode ?? false;
     const newLockout = !currentLockout;

@@ -1,14 +1,22 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Widget } from "@/lib/api";
 import { WidgetWrapper } from "./WidgetWrapper";
-import { BarChart3, AlertCircle } from "lucide-react";
+import { BarChart3 } from "lucide-react";
 
 // Extend TradingView types
+type TradingViewWidgetConfig = Record<string, unknown>;
+
+interface TradingViewWidgetConstructor {
+  new (config: TradingViewWidgetConfig): unknown;
+}
+
 declare global {
   interface Window {
-    TradingView: any;
+    TradingView?: {
+      widget?: TradingViewWidgetConstructor;
+    };
   }
 }
 
@@ -61,7 +69,7 @@ export function TradingViewWidget({
       // Clear container
       containerRef.current.innerHTML = "";
 
-      let widgetConfig: any = {
+      const widgetConfig: TradingViewWidgetConfig = {
         autosize: true,
         symbol: symbol,
         interval: "D",

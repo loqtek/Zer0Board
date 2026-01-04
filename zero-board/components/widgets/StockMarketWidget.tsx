@@ -10,7 +10,6 @@ import {
   BarChart3,
   RefreshCw,
   AlertCircle,
-  Activity,
   Globe,
   Building2,
 } from "lucide-react";

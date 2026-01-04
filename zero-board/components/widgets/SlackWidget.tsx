@@ -43,7 +43,7 @@ export function SlackWidget({ widget, isEditMode, onDelete, onConfigure }: Slack
               <p className="text-sm text-[var(--text-muted)]">No messages</p>
             </div>
           ) : (
-            recentMessages.map((msg: any, index: number) => (
+            recentMessages.map((msg: { text?: string; user?: string; ts?: string; [key: string]: unknown }, index: number) => (
               <div
                 key={index}
                 className="rounded border border-[var(--border)] bg-[var(--muted)]/30 p-2 hover:bg-[var(--muted)]/50 transition-colors"

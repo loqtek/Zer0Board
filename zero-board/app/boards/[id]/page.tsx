@@ -187,31 +187,6 @@ export default function BoardPage() {
     }
   }, [isAuthenticated, authLoading, router, accessToken]);
 
-  if (authLoading || isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="text-zinc-500">Loading...</div>
-      </div>
-    );
-  }
-
-  if (!isAuthenticated && !accessToken) {
-    return null;
-  }
-
-  if (error || !board) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-red-500">Board not found</h2>
-          <Button onClick={() => router.push("/dashboard")} className="mt-4">
-            Back to Dashboard
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
   const handleDeleteWidget = useCallback(
     (widgetId: number) => {
       if (confirm("Delete this widget?")) {
@@ -234,12 +209,9 @@ export default function BoardPage() {
     [isEditMode, handleDeleteWidget]
   );
 
-  const showHeader = !isFullscreen && !isLockoutMode && !accessToken;
-  const isApiKeyMode = !!accessToken;
-  const settings = effectiveSettings;
-
-  // Calculate board container styles based on settings
+  // Calculate board container styles based on settings (before early returns)
   const boardStyles = useMemo((): React.CSSProperties => {
+    const settings = effectiveSettings;
     const styles: React.CSSProperties = {
       minHeight: "100vh",
       backgroundColor: "var(--background)",
@@ -277,10 +249,11 @@ export default function BoardPage() {
     }
 
     return styles;
-  }, [settings]);
+  }, [effectiveSettings]);
 
-  // Get effective background settings
+  // Get effective background settings (before early returns)
   const effectiveBackgroundConfig = useMemo(() => {
+    const settings = effectiveSettings;
     if (settings?.background_config) {
       return settings.background_config;
     }
@@ -292,7 +265,36 @@ export default function BoardPage() {
       }
     }
     return { muted: true, volume: 0 };
-  }, [settings?.background_config, settings?.background_preset]);
+  }, [effectiveSettings]);
+
+  if (authLoading || isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="text-zinc-500">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated && !accessToken) {
+    return null;
+  }
+
+  if (error || !board) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-red-500">Board not found</h2>
+          <Button onClick={() => router.push("/dashboard")} className="mt-4">
+            Back to Dashboard
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  const showHeader = !isFullscreen && !isLockoutMode && !accessToken;
+  const isApiKeyMode = !!accessToken;
+  const settings = effectiveSettings;
 
   return (
     <div className="min-h-screen bg-[var(--background)]" style={boardStyles}>

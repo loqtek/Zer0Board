@@ -225,8 +225,14 @@ export async function searchSymbols(
       return []; // Rate limited, return empty
     }
 
-    const matches = data["bestMatches"] || [];
-    return matches.map((match: any) => ({
+    const matches = (data["bestMatches"] || []) as Array<{
+      "1. symbol": string;
+      "2. name": string;
+      "3. type": string;
+      "4. region": string;
+      "8. currency": string;
+    }>;
+    return matches.map((match) => ({
       symbol: match["1. symbol"],
       name: match["2. name"],
     }));

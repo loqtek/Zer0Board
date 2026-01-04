@@ -26,7 +26,7 @@ export function SmartHomeWidget({ widget, isEditMode, onDelete, onConfigure }: S
           <h3 className="font-semibold text-[var(--foreground)]">Smart Home</h3>
         </div>
         <div className="flex-1 space-y-2 overflow-y-auto">
-          {devices.map((device: any, index: number) => {
+          {devices.map((device: { entity_id: string; attributes?: { friendly_name?: string }; state?: string; icon?: React.ComponentType<{ className?: string }> }, index: number) => {
             const Icon = device.icon || Lightbulb;
             return (
               <div

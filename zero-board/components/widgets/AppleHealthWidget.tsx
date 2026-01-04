@@ -2,7 +2,7 @@
 
 import { Widget } from "@/lib/api";
 import { WidgetWrapper } from "./WidgetWrapper";
-import { Activity, Smartphone, AlertCircle, ExternalLink } from "lucide-react";
+import { Smartphone, AlertCircle, ExternalLink } from "lucide-react";
 
 interface AppleHealthWidgetProps {
   widget: Widget;
@@ -27,7 +27,7 @@ export function AppleHealthWidget({ widget, isEditMode, onDelete, onConfigure, o
                   Native App Required
                 </p>
                 <p className="text-xs text-[var(--text-muted)] leading-relaxed">
-                  Apple HealthKit is only available on iOS and macOS devices. To integrate Apple Health data with this web application, you'll need a native iOS/macOS app that can export or sync the data.
+                  Apple HealthKit is only available on iOS and macOS devices. To integrate Apple Health data with this web application, you&apos;ll need a native iOS/macOS app that can export or sync the data.
                 </p>
               </div>
             </div>

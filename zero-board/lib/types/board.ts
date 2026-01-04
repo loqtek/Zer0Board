@@ -1,4 +1,4 @@
-import type { Widget, BoardSettings } from "@/lib/api";
+import type { Widget } from "@/lib/api";
 import type { BoardPage } from "@/components/board/PageTabs";
 
 export interface WidgetPosition {

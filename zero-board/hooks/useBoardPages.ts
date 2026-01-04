@@ -46,7 +46,13 @@ export function useBoardPages({
   useEffect(() => {
     if (pages.length > 0 && !currentPageId) {
       const sortedPages = [...pages].sort((a, b) => a.order - b.order);
-      setCurrentPageId(sortedPages[0].id);
+      const firstPageId = sortedPages[0].id;
+      setCurrentPageId((prev) => {
+        if (!prev && firstPageId) {
+          return firstPageId;
+        }
+        return prev;
+      });
     }
   }, [pages, currentPageId]);
 
@@ -66,7 +72,7 @@ export function useBoardPages({
       }
       return widgetPageId === currentPageId;
     });
-  }, [board?.widgets, currentPageId, pages]);
+  }, [board, currentPageId, pages]);
 
   // Page management functions
   const handlePageAdd = useCallback(() => {
@@ -129,7 +135,7 @@ export function useBoardPages({
         setCurrentPageId(firstPageId);
       }
     },
-    [pages, board?.widgets, board?.layout_config, currentPageId, updateBoardMutation, updateWidgetPositionMutation]
+    [pages, board, currentPageId, updateBoardMutation, updateWidgetPositionMutation]
   );
 
   const handlePageReorder = useCallback(

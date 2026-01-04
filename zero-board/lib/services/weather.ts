@@ -35,7 +35,13 @@ export async function searchLocations(query: string): Promise<LocationSuggestion
     
     if (!data.results) return [];
     
-    return data.results.map((result: any) => ({
+    return data.results.map((result: {
+      name: string;
+      country: string;
+      latitude: number;
+      longitude: number;
+      admin1?: string;
+    }) => ({
       name: result.name,
       country: result.country,
       latitude: result.latitude,

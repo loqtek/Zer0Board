@@ -25,12 +25,7 @@ export const WidgetWrapper = memo(function WidgetWrapper({
 }: WidgetWrapperProps) {
   const themeType = widget.config?.themeType || "default";
   const customCSS = widget.config?.customCSS || "";
-  const [isMounted, setIsMounted] = useState(false);
-
-  // Ensure we're on the client before computing styles
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+  const [isMounted, setIsMounted] = useState(() => typeof window !== "undefined");
 
   // Helper function to convert hex to rgba
   const hexToRgba = (hex: string, alpha: number): string => {

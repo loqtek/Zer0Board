@@ -2,7 +2,6 @@
 
 import { Widget } from "@/lib/api";
 import { WidgetWrapper } from "./WidgetWrapper";
-import { BookmarkItem } from "./bookmark/BookmarkItem";
 import { BookmarkGroup } from "./bookmark/BookmarkGroup";
 
 interface BookmarkWidgetProps {
@@ -29,7 +28,7 @@ export interface BookmarkGroupData {
 
 export function BookmarkWidget({ widget, isEditMode, onDelete, onConfigure }: BookmarkWidgetProps) {
   const config = widget.config || {};
-  const groups: BookmarkGroupData[] = (config.groups || []).filter((g: any) => g && g.id);
+  const groups: BookmarkGroupData[] = (config.groups || []).filter((g: { id?: string } | null | undefined): g is { id: string } => g !== null && g !== undefined && typeof g === "object" && "id" in g && typeof g.id === "string");
   const themeType = config.themeType || "default";
 
   const defaultBorderColor = config.defaultBorderColor || "var(--border)";
@@ -49,9 +48,9 @@ export function BookmarkWidget({ widget, isEditMode, onDelete, onConfigure }: Bo
           </div>
         ) : (
           <div className="space-y-6">
-            {groups.map((group) => (
+            {groups.map((group, index) => (
               <BookmarkGroup
-                key={group.id || `group-${Math.random()}`}
+                key={group.id || `group-${index}`}
                 group={group}
                 defaultBorderColor={defaultBorderColor}
                 defaultTextColor={defaultTextColor}

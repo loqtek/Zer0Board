@@ -38,7 +38,7 @@ export function useBoardSettings({ board, currentPage }: UseBoardSettingsOptions
       auto_rotate_pages: board?.settings?.auto_rotate_pages,
       lockout_mode: board?.settings?.lockout_mode,
     };
-  }, [currentPage, board?.settings]);
+  }, [currentPage, board]);
 
   const isLockoutMode = board?.settings?.lockout_mode ?? false;
 

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { boardsApi, boardAccessTokensApi, BoardSettings, type BoardAccessToken, type BoardAccessTokenCreateResponse } from "@/lib/api";
+import { boardsApi, boardAccessTokensApi, BoardSettings, type BoardAccessTokenCreateResponse } from "@/lib/api";
 import { getErrorMessage } from "@/lib/utils/errors";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,25 +18,15 @@ interface BoardSettingsDialogProps {
 
 export function BoardSettingsDialog({ boardId, onClose }: BoardSettingsDialogProps) {
   const queryClient = useQueryClient();
-  const [settings, setSettings] = useState<Partial<BoardSettings>>({});
 
   const { data: currentSettings } = useQuery({
     queryKey: ["board-settings", boardId],
     queryFn: () => boardsApi.getSettings(boardId),
   });
 
-  const [selectedPresetCategory, setSelectedPresetCategory] = useState<string>("All");
-  const [showPresets, setShowPresets] = useState(false);
-  
-  // API Key management state
-  const [showApiKeys, setShowApiKeys] = useState(false);
-  const [newTokenName, setNewTokenName] = useState("");
-  const [newlyCreatedToken, setNewlyCreatedToken] = useState<BoardAccessTokenCreateResponse | null>(null);
-  const [visibleTokens, setVisibleTokens] = useState<Set<number>>(new Set());
-
-  useEffect(() => {
+  const [settings, setSettings] = useState<Partial<BoardSettings>>(() => {
     if (currentSettings) {
-      setSettings({
+      return {
         background_type: currentSettings.background_type || "none",
         background_source: currentSettings.background_source || "",
         background_config: currentSettings.background_config || {},
@@ -47,6 +37,41 @@ export function BoardSettingsDialog({ boardId, onClose }: BoardSettingsDialogPro
         orientation: currentSettings.orientation || "landscape",
         auto_rotate_pages: currentSettings.auto_rotate_pages ?? false,
         lockout_mode: currentSettings.lockout_mode ?? false,
+      };
+    }
+    return {};
+  });
+
+  const [selectedPresetCategory, setSelectedPresetCategory] = useState<string>("All");
+  const [showPresets, setShowPresets] = useState(false);
+  
+  // API Key management state
+  const [showApiKeys, setShowApiKeys] = useState(false);
+  const [newlyCreatedToken, setNewlyCreatedToken] = useState<BoardAccessTokenCreateResponse | null>(null);
+  const [visibleTokens, setVisibleTokens] = useState<Set<number>>(new Set());
+
+  // Update settings when currentSettings changes
+  useEffect(() => {
+    if (currentSettings) {
+      setSettings((prev) => {
+        // Only update if settings actually changed to avoid unnecessary re-renders
+        const newSettings = {
+          background_type: currentSettings.background_type || "none",
+          background_source: currentSettings.background_source || "",
+          background_config: currentSettings.background_config || {},
+          background_preset: currentSettings.background_preset || undefined,
+          resolution_width: currentSettings.resolution_width || 1920,
+          resolution_height: currentSettings.resolution_height || 1080,
+          aspect_ratio: currentSettings.aspect_ratio || "16:9",
+          orientation: currentSettings.orientation || "landscape",
+          auto_rotate_pages: currentSettings.auto_rotate_pages ?? false,
+          lockout_mode: currentSettings.lockout_mode ?? false,
+        };
+        // Check if settings actually changed
+        if (JSON.stringify(prev) !== JSON.stringify(newSettings)) {
+          return newSettings;
+        }
+        return prev;
       });
     }
   }, [currentSettings]);
@@ -299,10 +324,11 @@ export function BoardSettingsDialog({ boardId, onClose }: BoardSettingsDialogPro
                             }`}
                           >
                             <div className="relative w-full h-24 bg-[var(--muted)]">
-                              <img
+                              <Image
                                 src={getYouTubeThumbnail(getYouTubeVideoId(preset.source))}
                                 alt={preset.name}
-                                className="w-full h-full object-cover"
+                                fill
+                                className="object-cover"
                               />
                               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
                               <div className="absolute bottom-1 left-2 right-2">
@@ -695,7 +721,7 @@ function ApiKeysSection({
         <div className="flex gap-2">
           <input
             type="text"
-            placeholder="Optional name (e.g., 'TV Display')"
+            placeholder="Optional name (e.g., &apos;TV Display&apos;)"
             value={newTokenName}
             onChange={(e) => setNewTokenName(e.target.value)}
             className="flex-1 rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] px-3 py-2 text-sm text-[var(--foreground)]"
@@ -727,7 +753,7 @@ function ApiKeysSection({
             </Button>
           </div>
           <p className="text-xs text-[var(--text-muted)] mb-2">
-            Save this token now - you won't be able to see it again!
+            Save this token now - you won&apos;t be able to see it again!
           </p>
           <div className="flex gap-2">
             <code className="flex-1 p-2 bg-[var(--background)] border border-[var(--border)] rounded text-xs font-mono text-[var(--foreground)] break-all">

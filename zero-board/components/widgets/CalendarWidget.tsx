@@ -157,7 +157,7 @@ export function CalendarWidget({ widget, isEditMode, onDelete, onConfigure, onDu
       // Only skip if we're using local-only mode
       if (calendarType === "local" && useLocalEvents && localEvents.length > 0) {
         console.log("Using local events only");
-        setEvents(localEvents.map((e: any) => ({
+        setEvents(localEvents.map((e: { title?: string; date?: string; [key: string]: unknown }) => ({
           title: e.title || "",
           date: e.date || new Date().toISOString().split("T")[0],
           source: "Local",
@@ -217,7 +217,7 @@ export function CalendarWidget({ widget, isEditMode, onDelete, onConfigure, onDu
         }
 
         // Merge with local events
-        const allEvents = [...fetchedEvents, ...localEvents.map((e: any) => ({
+        const allEvents = [...fetchedEvents, ...localEvents.map((e: { title?: string; date?: string; [key: string]: unknown }) => ({
           title: e.title || "",
           date: e.date || new Date().toISOString().split("T")[0],
           source: "Local",
@@ -229,7 +229,7 @@ export function CalendarWidget({ widget, isEditMode, onDelete, onConfigure, onDu
         setEvents(allEvents.slice(0, maxEvents * 2)); // Get more events for filtering
       } catch (error) {
         console.error("Error fetching calendar events:", error);
-        setEvents(localEvents.map((e: any) => ({
+        setEvents(localEvents.map((e: { title?: string; date?: string; [key: string]: unknown }) => ({
           title: e.title || "",
           date: e.date || new Date().toISOString().split("T")[0],
           source: "Local",
@@ -344,7 +344,6 @@ export function CalendarWidget({ widget, isEditMode, onDelete, onConfigure, onDu
               filteredEvents.map((event, index) => {
                 const eventDate = new Date(event.date);
                 const isToday = eventDate.toISOString().split("T")[0] === todayStr;
-                const isTomorrow = eventDate.toISOString().split("T")[0] === new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().split("T")[0];
                 
                 return (
               <div

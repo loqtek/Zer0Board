@@ -23,7 +23,7 @@ export function WidgetConfigDialog({ widget, onClose }: WidgetConfigDialogProps)
   const [activeTab, setActiveTab] = useState<string>("appearance");
 
   const updateMutation = useMutation({
-    mutationFn: (newConfig: Record<string, any>) =>
+    mutationFn: (newConfig: Record<string, unknown>) =>
       widgetsApi.update(widget.board_id, widget.id, {
         config: newConfig,
       }),
@@ -395,8 +395,8 @@ function ClockConfigForm({
   config,
   setConfig,
 }: {
-  config: Record<string, any>;
-  setConfig: (config: Record<string, any>) => void;
+  config: Record<string, unknown>;
+  setConfig: (config: Record<string, unknown>) => void;
 }) {
   return (
     <div className="space-y-4">
@@ -539,8 +539,8 @@ function WeatherConfigForm({
   config,
   setConfig,
 }: {
-  config: Record<string, any>;
-  setConfig: (config: Record<string, any>) => void;
+  config: Record<string, unknown>;
+  setConfig: (config: Record<string, unknown>) => void;
 }) {
   return (
     <div className="space-y-4">
@@ -637,8 +637,8 @@ function NewsConfigForm({
   config,
   setConfig,
 }: {
-  config: Record<string, any>;
-  setConfig: (config: Record<string, any>) => void;
+  config: Record<string, unknown>;
+  setConfig: (config: Record<string, unknown>) => void;
 }) {
   const [useCustomHeadlines, setUseCustomHeadlines] = useState(
     config.useCustomHeadlines === true
@@ -650,7 +650,7 @@ function NewsConfigForm({
   const headlinesStr = JSON.stringify(headlines);
 
   useEffect(() => {
-    setConfig((prevConfig: Record<string, any>) => ({ 
+    setConfig((prevConfig: Record<string, unknown>) => ({ 
       ...prevConfig, 
       headlines, 
       useCustomHeadlines,
@@ -776,8 +776,8 @@ function NewsRssFeedsTab({
   config,
   setConfig,
 }: {
-  config: Record<string, any>;
-  setConfig: (config: Record<string, any>) => void;
+  config: Record<string, unknown>;
+  setConfig: (config: Record<string, unknown>) => void;
 }) {
   const [selectedFeedRegion, setSelectedFeedRegion] = useState<string>("");
   const [selectedFeedCategory, setSelectedFeedCategory] = useState<string>("");
@@ -804,7 +804,7 @@ function NewsRssFeedsTab({
   );
 
   useEffect(() => {
-    setConfig((prevConfig: Record<string, any>) => ({ 
+    setConfig((prevConfig: Record<string, unknown>) => ({ 
       ...prevConfig, 
       rssFeedIds: selectedFeedIds,
     }));
@@ -822,7 +822,7 @@ function NewsRssFeedsTab({
     <div className="space-y-4">
       <div>
         <p className="text-xs text-[var(--text-muted)] mb-4">
-          Select RSS feeds to use for news headlines. You can choose from default feeds or custom feeds you've added in Integrations.
+          Select RSS feeds to use for news headlines. You can choose from default feeds or custom feeds you&apos;ve added in Integrations.
         </p>
 
         {/* Custom RSS Feeds */}
@@ -939,8 +939,8 @@ function NewsDisplayOptionsTab({
   config,
   setConfig,
 }: {
-  config: Record<string, any>;
-  setConfig: (config: Record<string, any>) => void;
+  config: Record<string, unknown>;
+  setConfig: (config: Record<string, unknown>) => void;
 }) {
   return (
     <div className="space-y-4">
@@ -1010,8 +1010,8 @@ function QRCodeConfigForm({
   config,
   setConfig,
 }: {
-  config: Record<string, any>;
-  setConfig: (config: Record<string, any>) => void;
+  config: Record<string, unknown>;
+  setConfig: (config: Record<string, unknown>) => void;
 }) {
   return (
     <div className="space-y-4">
@@ -1061,8 +1061,8 @@ function GraphConfigForm({
   setConfig,
 }: {
   widget: Widget;
-  config: Record<string, any>;
-  setConfig: (config: Record<string, any>) => void;
+  config: Record<string, unknown>;
+  setConfig: (config: Record<string, unknown>) => void;
 }) {
   const [manualDataPoints, setManualDataPoints] = useState<number[]>(
     config.dataPoints || [65, 70, 68, 75, 80, 78, 85]
@@ -1072,7 +1072,7 @@ function GraphConfigForm({
   );
 
   useEffect(() => {
-    setConfig((prevConfig: Record<string, any>) => ({
+    setConfig((prevConfig: Record<string, unknown>) => ({
       ...prevConfig,
       dataPoints: manualDataPoints,
       useManualData,
@@ -1242,7 +1242,7 @@ function GraphConfigForm({
                 placeholder="data.values or results"
               />
               <p className="text-xs text-[var(--text-muted)] mt-1">
-                JSONPath to extract data array from API response (e.g., "data.values").
+                JSONPath to extract data array from API response (e.g., &quot;data.values&quot;).
               </p>
             </div>
 
@@ -1300,8 +1300,8 @@ function FitbitConfigForm({
   config,
   setConfig,
 }: {
-  config: Record<string, any>;
-  setConfig: (config: Record<string, any>) => void;
+  config: Record<string, unknown>;
+  setConfig: (config: Record<string, unknown>) => void;
 }) {
   return (
     <div className="space-y-4">
@@ -1319,7 +1319,7 @@ function FitbitConfigForm({
                 onChange={(e) => setConfig({ ...config, showTodayStats: e.target.checked })}
                 className="rounded border-[var(--input-border)]"
               />
-              <span className="text-sm">Show Today's Stats</span>
+              <span className="text-sm">Show Today&apos;s Stats</span>
             </label>
           </div>
 
@@ -1385,8 +1385,8 @@ function EmailConfigForm({
   setConfig,
 }: {
   widget: Widget;
-  config: Record<string, any>;
-  setConfig: (config: Record<string, any>) => void;
+  config: Record<string, unknown>;
+  setConfig: (config: Record<string, unknown>) => void;
 }) {
   const { data: integrations } = useQuery({
     queryKey: ["integrations"],
@@ -1492,8 +1492,8 @@ function HomeAssistantConfigForm({
   setConfig,
 }: {
   widget: Widget;
-  config: Record<string, any>;
-  setConfig: (config: Record<string, any>) => void;
+  config: Record<string, unknown>;
+  setConfig: (config: Record<string, unknown>) => void;
 }) {
   const { data: integrations } = useQuery({
     queryKey: ["integrations"],
@@ -1561,7 +1561,7 @@ function HomeAssistantConfigForm({
                 <div className="text-sm text-[var(--text-muted)]">No entities found. Make sure your Home Assistant integration is configured correctly.</div>
               ) : (
                 <div className="max-h-60 overflow-y-auto border border-[var(--border)] rounded p-2 space-y-1">
-                  {availableEntities.map((entity: any) => (
+                  {availableEntities.map((entity: { entity_id: string; attributes?: { friendly_name?: string } }) => (
                     <label
                       key={entity.entity_id}
                       className="flex items-center gap-2 p-2 hover:bg-[var(--muted)] rounded cursor-pointer"
@@ -1638,8 +1638,8 @@ function StockMarketConfigForm({
   setConfig,
 }: {
   widget: Widget;
-  config: Record<string, any>;
-  setConfig: (config: Record<string, any>) => void;
+  config: Record<string, unknown>;
+  setConfig: (config: Record<string, unknown>) => void;
 }) {
   return (
     <div className="space-y-4">
@@ -1760,8 +1760,8 @@ function TradingViewConfigForm({
   setConfig,
 }: {
   widget: Widget;
-  config: Record<string, any>;
-  setConfig: (config: Record<string, any>) => void;
+  config: Record<string, unknown>;
+  setConfig: (config: Record<string, unknown>) => void;
 }) {
   return (
     <div className="space-y-4">
@@ -1844,8 +1844,8 @@ function CalendarConfigForm({
   setConfig,
 }: {
   widget: Widget;
-  config: Record<string, any>;
-  setConfig: (config: Record<string, any>) => void;
+  config: Record<string, unknown>;
+  setConfig: (config: Record<string, unknown>) => void;
 }) {
   const [events, setEvents] = useState<Array<{ title: string; date: string }>>(
     config.events || []
@@ -1877,7 +1877,7 @@ function CalendarConfigForm({
   const eventsStr = JSON.stringify(events);
 
   useEffect(() => {
-    setConfig((prevConfig: Record<string, any>) => ({ 
+    setConfig((prevConfig: Record<string, unknown>) => ({ 
       ...prevConfig, 
       events, 
       calendarType, 
@@ -2076,8 +2076,8 @@ function NoteConfigForm({
   config,
   setConfig,
 }: {
-  config: Record<string, any>;
-  setConfig: (config: Record<string, any>) => void;
+  config: Record<string, unknown>;
+  setConfig: (config: Record<string, unknown>) => void;
 }) {
   return (
     <div className="space-y-4">
@@ -2099,8 +2099,8 @@ function TodoConfigForm({
   config,
   setConfig,
 }: {
-  config: Record<string, any>;
-  setConfig: (config: Record<string, any>) => void;
+  config: Record<string, unknown>;
+  setConfig: (config: Record<string, unknown>) => void;
 }) {
   return (
     <div className="space-y-4">
@@ -2146,8 +2146,8 @@ function BookmarkConfigForm({
   config,
   setConfig,
 }: {
-  config: Record<string, any>;
-  setConfig: (config: Record<string, any>) => void;
+  config: Record<string, unknown>;
+  setConfig: (config: Record<string, unknown>) => void;
 }) {
   const groups = config.groups || [];
   const defaultBorderColor = config.defaultBorderColor || "var(--border)";
@@ -2162,17 +2162,17 @@ function BookmarkConfigForm({
     setConfig({ ...config, groups: [...groups, newGroup] });
   };
 
-  const updateGroup = (groupId: string, updates: Partial<any>) => {
+  const updateGroup = (groupId: string, updates: Record<string, unknown>) => {
     setConfig({
       ...config,
-      groups: groups.map((g: any) => (g.id === groupId ? { ...g, ...updates } : g)),
+      groups: groups.map((g: { id: string; [key: string]: unknown }) => (g.id === groupId ? { ...g, ...updates } : g)),
     });
   };
 
   const deleteGroup = (groupId: string) => {
     setConfig({
       ...config,
-      groups: groups.filter((g: any) => g.id !== groupId),
+      groups: groups.filter((g: { id: string }) => g.id !== groupId),
     });
   };
 
@@ -2195,27 +2195,27 @@ function BookmarkConfigForm({
       icon: "",
     };
     updateGroup(groupId, {
-      bookmarks: [...(groups.find((g: any) => g.id === groupId)?.bookmarks || []), newBookmark],
+      bookmarks: [...((groups.find((g: { id: string; bookmarks?: unknown[] }) => g.id === groupId)?.bookmarks || []) as unknown[]), newBookmark],
     });
   };
 
-  const updateBookmark = (groupId: string, bookmarkId: string, updates: Partial<any>) => {
-    const group = groups.find((g: any) => g.id === groupId);
+  const updateBookmark = (groupId: string, bookmarkId: string, updates: Record<string, unknown>) => {
+    const group = groups.find((g: { id: string }) => g.id === groupId);
     if (!group) return;
 
     updateGroup(groupId, {
-      bookmarks: group.bookmarks.map((b: any) =>
+      bookmarks: (group.bookmarks as Array<{ id: string; [key: string]: unknown }>).map((b) =>
         b.id === bookmarkId ? { ...b, ...updates } : b
       ),
     });
   };
 
   const deleteBookmark = (groupId: string, bookmarkId: string) => {
-    const group = groups.find((g: any) => g.id === groupId);
+    const group = groups.find((g: { id: string }) => g.id === groupId);
     if (!group) return;
 
     updateGroup(groupId, {
-      bookmarks: group.bookmarks.filter((b: any) => b.id !== bookmarkId),
+      bookmarks: (group.bookmarks as Array<{ id: string }>).filter((b) => b.id !== bookmarkId),
     });
   };
 
@@ -2270,7 +2270,7 @@ function BookmarkConfigForm({
           </Button>
         </div>
 
-        {groups.map((group: any) => (
+        {groups.map((group: { id: string; name: string; bookmarks?: unknown[] }) => (
           <div
             key={group.id}
             className="border border-[var(--border)] rounded-lg p-4 space-y-4 bg-[var(--muted)]/30"
@@ -2327,7 +2327,7 @@ function BookmarkConfigForm({
                 </Button>
               </div>
 
-              {group.bookmarks?.map((bookmark: any) => (
+              {(group.bookmarks as Array<{ id: string; name: string; url: string; icon?: string }> | undefined)?.map((bookmark) => (
                 <div key={bookmark.id} className="flex gap-2 items-center">
                   <Input
                     type="text"
@@ -2392,7 +2392,7 @@ function BookmarkConfigForm({
 
         {groups.length === 0 && (
           <div className="text-center py-8 text-[var(--text-muted)] text-sm">
-            No groups yet. Click "Add Group" to create your first bookmark group.
+            No groups yet. Click &quot;Add Group&quot; to create your first bookmark group.
           </div>
         )}
       </div>

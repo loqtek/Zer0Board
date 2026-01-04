@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth";
@@ -11,8 +11,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { 
-  Layout, Download, Image as ImageIcon, Settings2, 
-  CheckCircle2, Loader2, Eye, Search
+  Layout, Download, Settings2, 
+  Loader2, Eye, Search
 } from "lucide-react";
 import { loadBoardTemplates, type BoardTemplate } from "@/lib/services/templates";
 import Image from "next/image";
@@ -48,7 +48,7 @@ export default function TemplatesPage() {
   });
 
   const updateSettingsMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: any }) =>
+    mutationFn: ({ id, data }: { id: number; data: Record<string, unknown> }) =>
       boardsApi.updateSettings(id, data),
     onError: (error) => {
       toast.error(getErrorMessage(error));
@@ -76,7 +76,7 @@ export default function TemplatesPage() {
 
       // Update board settings if they exist
       if (template.data.settings) {
-        const settingsData: any = {};
+        const settingsData: Record<string, unknown> = {};
         if (template.data.settings.background_type) {
           settingsData.background_type = template.data.settings.background_type;
         }
@@ -201,7 +201,7 @@ export default function TemplatesPage() {
                   <CardContent className="py-12 text-center">
                     <Search className="h-12 w-12 text-[var(--text-muted)] mx-auto mb-4" />
                     <p className="text-[var(--text-muted)] mb-2">
-                      No templates found matching "{searchQuery}"
+                      No templates found matching &quot;{searchQuery}&quot;
                     </p>
                     <Button
                       variant="outline"

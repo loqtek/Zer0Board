@@ -158,8 +158,14 @@ export async function getEventsFromGoogle(
     );
     
     if (response.ok) {
-      const data = await response.json();
-      return (data.items || []).map((item: any) => ({
+      const data = await response.json() as { items?: Array<{
+        summary?: string;
+        start?: { date?: string; dateTime?: string };
+        end?: { dateTime?: string };
+        description?: string;
+        location?: string;
+      }> };
+      return (data.items || []).map((item) => ({
         title: item.summary || "Untitled Event",
         date: item.start?.date || item.start?.dateTime?.split("T")[0] || "",
         startTime: item.start?.dateTime?.split("T")[1]?.split("+")[0]?.split("Z")[0],

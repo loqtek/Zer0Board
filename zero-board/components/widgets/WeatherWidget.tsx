@@ -3,8 +3,7 @@
 import { useMemo, useState, useEffect } from "react";
 import { Widget } from "@/lib/api";
 import { WidgetWrapper } from "./WidgetWrapper";
-import { getWeather, searchLocations, type LocationSuggestion, type WeatherData } from "@/lib/services/weather";
-import { useQuery } from "@tanstack/react-query";
+import { getWeather, type WeatherData } from "@/lib/services/weather";
 
 interface WeatherWidgetProps {
   widget: Widget;

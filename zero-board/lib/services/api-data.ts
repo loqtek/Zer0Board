@@ -53,16 +53,16 @@ function parseHeaders(headersStr?: string): Record<string, string> {
 /**
  * Extract data from JSON response using a path (e.g., "data.values" or "results")
  */
-function extractDataPath(obj: any, path?: string): any {
+function extractDataPath(obj: unknown, path?: string): unknown {
   if (!path) {
     return obj;
   }
 
   const parts = path.split(".");
-  let current = obj;
+  let current: unknown = obj;
   for (const part of parts) {
-    if (current && typeof current === "object" && part in current) {
-      current = current[part];
+    if (current && typeof current === "object" && current !== null && part in current) {
+      current = (current as Record<string, unknown>)[part];
     } else {
       return null;
     }
@@ -74,7 +74,7 @@ function extractDataPath(obj: any, path?: string): any {
  * Transform API response data into chart data points
  */
 function transformToDataPoints(
-  data: any,
+  data: unknown,
   xField?: string,
   yField?: string
 ): ApiDataPoint[] {
@@ -93,16 +93,20 @@ function transformToDataPoints(
       x = index + 1;
     } else if (typeof item === "object" && item !== null) {
       // Object with fields
-      if (xField && item[xField] !== undefined) {
-        x = item[xField];
-        label = String(item[xField]);
+      const itemObj = item as Record<string, unknown>;
+      if (xField && itemObj[xField] !== undefined) {
+        x = itemObj[xField] as string | number;
+        label = String(itemObj[xField]);
       }
-      if (yField && item[yField] !== undefined) {
-        y = typeof item[yField] === "number" ? item[yField] : parseFloat(item[yField]) || 0;
-      } else if (item.value !== undefined) {
-        y = typeof item.value === "number" ? item.value : parseFloat(item.value) || 0;
-      } else if (item.y !== undefined) {
-        y = typeof item.y === "number" ? item.y : parseFloat(item.y) || 0;
+      if (yField && itemObj[yField] !== undefined) {
+        const yValue = itemObj[yField];
+        y = typeof yValue === "number" ? yValue : parseFloat(String(yValue)) || 0;
+      } else if (itemObj.value !== undefined) {
+        const value = itemObj.value;
+        y = typeof value === "number" ? value : parseFloat(String(value)) || 0;
+      } else if (itemObj.y !== undefined) {
+        const yVal = itemObj.y;
+        y = typeof yVal === "number" ? yVal : parseFloat(String(yVal)) || 0;
       }
     }
 

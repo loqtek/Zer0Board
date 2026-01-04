@@ -12,18 +12,25 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>("dark");
+  const [theme, setThemeState] = useState<Theme>(() => {
+    if (typeof window !== "undefined") {
+      const savedTheme = localStorage.getItem("zero-board-theme") as Theme;
+      if (savedTheme && ["light", "dark", "dark-red"].includes(savedTheme)) {
+        return savedTheme;
+      }
+    }
+    return "dark";
+  });
 
   useEffect(() => {
-    // Load theme from localStorage
-    const savedTheme = localStorage.getItem("zero-board-theme") as Theme;
-    if (savedTheme && ["light", "dark", "dark-red"].includes(savedTheme)) {
-      setThemeState(savedTheme);
-    } else {
-      // Apply dark theme immediately if no saved preference
+    // Apply initial theme class if not already set
+    if (typeof window !== "undefined") {
       const root = document.documentElement;
-      root.classList.remove("theme-light", "theme-dark", "theme-dark-red");
-      root.classList.add("theme-dark");
+      const savedTheme = localStorage.getItem("zero-board-theme") as Theme;
+      if (!savedTheme || !["light", "dark", "dark-red"].includes(savedTheme)) {
+        root.classList.remove("theme-light", "theme-dark", "theme-dark-red");
+        root.classList.add("theme-dark");
+      }
     }
   }, []);
 

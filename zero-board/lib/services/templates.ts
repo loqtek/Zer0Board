@@ -11,12 +11,12 @@ export interface BoardTemplate {
   data: {
     title: string;
     description: string | null;
-    layout_config: Record<string, any>;
-    settings: Record<string, any>;
+    layout_config: Record<string, unknown>;
+    settings: Record<string, unknown>;
     widgets: Array<{
       type: string;
-      config: Record<string, any>;
-      position: Record<string, any>;
+      config: Record<string, unknown>;
+      position: Record<string, unknown>;
     }>;
     exported_at: string;
     version: string;
@@ -36,7 +36,7 @@ export async function loadBoardTemplates(): Promise<BoardTemplate[]> {
       // Next.js webpack handles JSON imports automatically
       const template1Module = await import("@/boardTemplates/template1/template1.json");
       // JSON modules in Next.js export the data as default
-      const template1Data = (template1Module as any).default || template1Module;
+      const template1Data = ((template1Module as { default?: unknown }).default || template1Module) as BoardTemplate["data"];
       
       const template1: BoardTemplate = {
         id: "template1",
@@ -53,7 +53,7 @@ export async function loadBoardTemplates(): Promise<BoardTemplate[]> {
     // Load template2
     try {
       const template2Module = await import("@/boardTemplates/template2/template2.json");
-      const template2Data = (template2Module as any).default || template2Module;
+      const template2Data = ((template2Module as { default?: unknown }).default || template2Module) as BoardTemplate["data"];
       
       const template2: BoardTemplate = {
         id: "template2",
@@ -70,7 +70,7 @@ export async function loadBoardTemplates(): Promise<BoardTemplate[]> {
     // Load template3
     try {
       const template3Module = await import("@/boardTemplates/template3/template3.json");
-      const template3Data = (template3Module as any).default || template3Module;
+      const template3Data = ((template3Module as { default?: unknown }).default || template3Module) as BoardTemplate["data"];
       
       const template3: BoardTemplate = {
         id: "template3",
@@ -87,7 +87,7 @@ export async function loadBoardTemplates(): Promise<BoardTemplate[]> {
     // Load template4
     try {
       const template4Module = await import("@/boardTemplates/template4/template4.json");
-      const template4Data = (template4Module as any).default || template4Module;
+      const template4Data = ((template4Module as { default?: unknown }).default || template4Module) as BoardTemplate["data"];
       
       const template4: BoardTemplate = {
         id: "template4",
@@ -104,7 +104,7 @@ export async function loadBoardTemplates(): Promise<BoardTemplate[]> {
     // Load template5
     try {
       const template5Module = await import("@/boardTemplates/template5/template5.json");
-      const template5Data = (template5Module as any).default || template5Module;
+      const template5Data = ((template5Module as { default?: unknown }).default || template5Module) as BoardTemplate["data"];
       
       const template5: BoardTemplate = {
         id: "template5",
@@ -121,7 +121,7 @@ export async function loadBoardTemplates(): Promise<BoardTemplate[]> {
     // Load template6
     try {
       const template6Module = await import("@/boardTemplates/template6/template6.json");
-      const template6Data = (template6Module as any).default || template6Module;
+      const template6Data = ((template6Module as { default?: unknown }).default || template6Module) as BoardTemplate["data"];
       
       const template6: BoardTemplate = {
         id: "template6",

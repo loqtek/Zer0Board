@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth";
-import { settingsApi, Integration } from "@/lib/api";
+import { settingsApi } from "@/lib/api";
 import { getErrorMessage } from "@/lib/utils/errors";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,12 +13,13 @@ import { useRouter } from "next/navigation";
 import { 
   X, CheckCircle2, AlertCircle, Settings2, ChevronRight,
   Calendar, TrendingUp, MessageSquare, Activity, Home, 
-  Image as ImageIcon, Heart, Zap, Video, Search as SearchIcon
+  Image as ImageIcon, Zap, Video, Search as SearchIcon
 } from "lucide-react";
 import { boardsApi } from "@/lib/api";
 import { backgroundPresets, backgroundCategories, getYouTubeVideoId, getYouTubeThumbnail, type BackgroundPreset } from "@/lib/data/backgroundPresets";
+import Image from "next/image";
 
-const categoryIcons: Record<string, any> = {
+const categoryIcons: Record<string, React.ComponentType<{ className?: string }>> = {
   "Calendars": Calendar,
   "Finance & Trading": TrendingUp,
   "Communication": MessageSquare,
@@ -33,11 +34,11 @@ export default function IntegrationsPage() {
   const { isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [selectedWidget, setSelectedWidget] = useState<any>(null);
+  const [selectedWidget, setSelectedWidget] = useState<{ type: string; name: string; [key: string]: unknown } | null>(null);
   const [showSetupForm, setShowSetupForm] = useState(false);
   const [serviceType, setServiceType] = useState<string>("api_key");
   const [testingConnection, setTestingConnection] = useState(false);
-  const [testResult, setTestResult] = useState<{ success: boolean; message: string; details?: any } | null>(null);
+  const [testResult, setTestResult] = useState<{ success: boolean; message: string; details?: Record<string, unknown> } | null>(null);
   
   // Backgrounds section state
   const [showBackgrounds, setShowBackgrounds] = useState(false);
@@ -48,7 +49,6 @@ export default function IntegrationsPage() {
 
   const {
     data: templates,
-    isLoading: templatesLoading,
   } = useQuery({
     queryKey: ["widget-templates"],
     queryFn: () => settingsApi.getWidgetTemplates(),
@@ -84,7 +84,7 @@ export default function IntegrationsPage() {
   });
 
   const updateIntegrationMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: any }) =>
+    mutationFn: ({ id, data }: { id: number; data: Record<string, unknown> }) =>
       settingsApi.updateIntegration(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["integrations"] });
@@ -114,7 +114,7 @@ export default function IntegrationsPage() {
   });
 
   const testConnectionMutation = useMutation({
-    mutationFn: (data: { service: string; service_type: string; config: Record<string, any> }) =>
+    mutationFn: (data: { service: string; service_type: string; config: Record<string, unknown> }) =>
       settingsApi.testIntegration(data),
     onSuccess: (result) => {
       setTestResult(result);
@@ -202,7 +202,7 @@ export default function IntegrationsPage() {
     setTestResult(null);
   };
 
-  const handleWidgetSelect = (widget: any) => {
+  const handleWidgetSelect = (widget: { type: string; name: string; [key: string]: unknown }) => {
     const integration = integrations?.find(
       (i) => i.service === widget.type && i.is_active
     );
@@ -234,7 +234,7 @@ export default function IntegrationsPage() {
     setTestingConnection(true);
     setTestResult(null);
 
-    let config: Record<string, any> = {};
+    let config: Record<string, unknown> = {};
     
     if (serviceType === "url") {
       const url = formData.get("url") as string;
@@ -328,7 +328,7 @@ export default function IntegrationsPage() {
 
     const formData = new FormData(e.currentTarget);
     
-    let config: Record<string, any> = {};
+    let config: Record<string, unknown> = {};
     
     if (serviceType === "url") {
       const url = formData.get("url") as string;
@@ -387,9 +387,6 @@ export default function IntegrationsPage() {
 
   const categories = templates?.map(cat => cat.category) || [];
   const selectedCategoryData = templates?.find(cat => cat.category === selectedCategory);
-  const selectedWidgetIntegration = selectedWidget 
-    ? integrations?.find(i => i.service === selectedWidget.type && i.is_active)
-    : null;
 
   return (
     <div className="min-h-screen bg-[var(--background)] flex">
@@ -587,10 +584,12 @@ export default function IntegrationsPage() {
                       className="overflow-hidden hover:shadow-lg transition-shadow"
                     >
                       <div className="relative w-full h-32 bg-[var(--muted)]">
-                        <img
+                        <Image
                           src={getYouTubeThumbnail(getYouTubeVideoId(preset.source))}
                           alt={preset.name}
-                          className="w-full h-full object-cover"
+                          fill
+                          className="object-cover"
+                          unoptimized
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                         <div className="absolute bottom-2 left-2 right-2">
@@ -810,7 +809,7 @@ export default function IntegrationsPage() {
                               onChange={() => setTestResult(null)}
                             />
                             <p className="text-xs text-[var(--text-muted)] mt-1">
-                              Your email provider's IMAP server address.
+                              Your email provider&apos;s IMAP server address.
                             </p>
                           </div>
                           <div className="grid grid-cols-2 gap-4">
@@ -967,7 +966,7 @@ export default function IntegrationsPage() {
                           </div>
                           <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3">
                             <p className="text-xs text-blue-600 dark:text-blue-400">
-                              <strong>OAuth Flow:</strong> After entering Client ID and Secret, you'll need to complete the OAuth authorization flow. 
+                              <strong>OAuth Flow:</strong> After entering Client ID and Secret, you&apos;ll need to complete the OAuth authorization flow. 
                               The service will redirect you to authorize the application, then return with an access token.
                             </p>
                           </div>
@@ -1050,7 +1049,7 @@ export default function IntegrationsPage() {
                             <div className="mt-2 text-xs">
                               <p>Available calendars:</p>
                               <ul className="list-disc list-inside ml-2">
-                                {testResult.details.calendars.map((cal: any, idx: number) => (
+                                {(testResult.details.calendars as Array<{ summary?: string; name?: string; id?: string }>).map((cal, idx: number) => (
                                   <li key={idx}>{cal.summary || cal.name || cal.id}</li>
                                 ))}
                               </ul>
@@ -1373,7 +1372,7 @@ export default function IntegrationsPage() {
                   <Card>
                     <CardContent className="py-8 text-center">
                       <p className="text-[var(--text-muted)]">
-                        No custom RSS feeds added yet. Click "Add RSS Feed" to get started.
+                        No custom RSS feeds added yet. Click &quot;Add RSS Feed&quot; to get started.
                       </p>
                     </CardContent>
                   </Card>

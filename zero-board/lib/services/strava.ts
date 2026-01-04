@@ -30,10 +30,21 @@ export interface StravaStats {
   lastActivity?: StravaActivity;
 }
 
+export interface StravaAthlete {
+  id: number;
+  username: string;
+  firstname: string;
+  lastname: string;
+  city?: string;
+  state?: string;
+  country?: string;
+  profile?: string;
+}
+
 /**
  * Get Strava athlete profile
  */
-export async function getStravaAthlete(accessToken: string): Promise<any> {
+export async function getStravaAthlete(accessToken: string): Promise<StravaAthlete> {
   const response = await fetch("https://www.strava.com/api/v3/athlete", {
     headers: {
       Authorization: `Bearer ${accessToken}`,

@@ -7,9 +7,9 @@ import { Card } from "./card";
 interface AutocompleteProps {
   value: string;
   onChange: (value: string) => void;
-  onSelect?: (item: any) => void;
-  fetchSuggestions: (query: string) => Promise<any[]>;
-  getDisplayValue: (item: any) => string;
+  onSelect?: (item: unknown) => void;
+  fetchSuggestions: (query: string) => Promise<unknown[]>;
+  getDisplayValue: (item: unknown) => string;
   placeholder?: string;
   label?: string;
   className?: string;
@@ -25,7 +25,7 @@ export function Autocomplete({
   label,
   className,
 }: AutocompleteProps) {
-  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [suggestions, setSuggestions] = useState<unknown[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -66,7 +66,7 @@ export function Autocomplete({
     return () => clearTimeout(debounceTimer);
   }, [value, fetchSuggestions]);
 
-  const handleSelect = (item: any) => {
+  const handleSelect = (item: unknown) => {
     onChange(getDisplayValue(item));
     if (onSelect) {
       onSelect(item);

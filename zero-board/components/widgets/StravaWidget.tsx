@@ -27,7 +27,6 @@ export function StravaWidget({ widget, isEditMode, onDelete, onConfigure, onDupl
   );
 
   const accessToken = stravaIntegration?.config?.access_token;
-  const refreshToken = stravaIntegration?.config?.refresh_token;
 
   // Widget customization options
   const showWeeklyStats = widget.config?.showWeeklyStats !== false;

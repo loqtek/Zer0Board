@@ -142,8 +142,8 @@ export interface Widget {
   id: number;
   board_id: number;
   type: string;
-  config: Record<string, any>;
-  position: Record<string, any>;
+  config: Record<string, unknown>;
+  position: Record<string, unknown>;
   created_at: string;
   updated_at: string;
 }

@@ -3,6 +3,7 @@
 import { Bookmark } from "../BookmarkWidget";
 import { ExternalLink } from "lucide-react";
 import { useMemo } from "react";
+import Image from "next/image";
 
 interface BookmarkItemProps {
   bookmark: Bookmark;
@@ -66,20 +67,15 @@ export function BookmarkItem({ bookmark, borderColor, textColor, themeType = "de
         {isEmoji ? (
           <span className="text-4xl">{displayIcon}</span>
         ) : (
-          <img
-            src={displayIcon}
-            alt={bookmark.name}
-            className="w-full h-full object-contain"
-            onError={(e) => {
-              // Fallback to emoji if image fails to load
-              const target = e.target as HTMLImageElement;
-              target.style.display = "none";
-              const fallback = document.createElement("span");
-              fallback.textContent = "🔗";
-              fallback.className = "text-4xl";
-              target.parentElement?.appendChild(fallback);
-            }}
-          />
+          <div className="relative w-full h-full">
+            <Image
+              src={displayIcon}
+              alt={bookmark.name}
+              fill
+              className="object-contain"
+              unoptimized
+            />
+          </div>
         )}
       </div>
 

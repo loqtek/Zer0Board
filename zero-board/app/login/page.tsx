@@ -33,7 +33,7 @@ export default function LoginPage() {
 
     try {
       await login(username, password);
-    } catch (err) {
+    } catch {
       // Error is already handled by toast in auth hook
       setError("Login failed. Please try again.");
     } finally {

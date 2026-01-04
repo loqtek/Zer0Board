@@ -1,10 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
-import { boardsApi, BoardSettings } from "@/lib/api";
-import { getErrorMessage } from "@/lib/utils/errors";
+import { BoardSettings } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -44,14 +41,21 @@ export function PageSettingsDialog({
 
   useEffect(() => {
     if (useGlobalSettings && globalSettings) {
-      setPageSettings({
-        background_type: globalSettings.background_type || "none",
-        background_source: globalSettings.background_source || "",
-        background_config: globalSettings.background_config || {},
-        resolution_width: globalSettings.resolution_width || 1920,
-        resolution_height: globalSettings.resolution_height || 1080,
-        aspect_ratio: globalSettings.aspect_ratio || "16:9",
-        orientation: globalSettings.orientation || "landscape",
+      setPageSettings((prev) => {
+        const newSettings = {
+          background_type: globalSettings.background_type || "none",
+          background_source: globalSettings.background_source || "",
+          background_config: globalSettings.background_config || {},
+          resolution_width: globalSettings.resolution_width || 1920,
+          resolution_height: globalSettings.resolution_height || 1080,
+          aspect_ratio: globalSettings.aspect_ratio || "16:9",
+          orientation: globalSettings.orientation || "landscape",
+        };
+        // Only update if settings actually changed
+        if (JSON.stringify(prev) !== JSON.stringify(newSettings)) {
+          return newSettings;
+        }
+        return prev;
       });
     }
   }, [useGlobalSettings, globalSettings]);

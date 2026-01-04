@@ -47,7 +47,7 @@ export function PhotoWidget({ widget, isEditMode, onDelete, onConfigure }: Photo
         </div>
         {photos.length > 1 && (
           <div className="flex gap-1 justify-center">
-            {photos.map((_: any, index: number) => (
+            {photos.map((_: unknown, index: number) => (
               <div
                 key={index}
                 className={`h-2 rounded-full transition-all ${

@@ -18,14 +18,20 @@ export function useBoardFullscreen({
   updateBoardMutation,
 }: UseBoardFullscreenOptions) {
   const router = useRouter();
-  const [isFullscreen, setIsFullscreen] = useState(false);
+  const shouldBeFullscreenInitial = fullScreenParam || board?.layout_config?.fullscreen === true;
+  const [isFullscreen, setIsFullscreen] = useState(shouldBeFullscreenInitial);
 
   // Handle fullscreen mode
   useEffect(() => {
     const shouldBeFullscreen = fullScreenParam || board?.layout_config?.fullscreen === true;
 
     if (shouldBeFullscreen && typeof window !== "undefined") {
-      setIsFullscreen(true);
+      setIsFullscreen((prev) => {
+        if (prev !== shouldBeFullscreen) {
+          return shouldBeFullscreen;
+        }
+        return prev;
+      });
 
       // Auto-enter fullscreen
       const enterFullscreen = async () => {
