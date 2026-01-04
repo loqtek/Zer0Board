@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { toast } from "sonner";
-import type { BoardPage } from "@/components/board/PageTabs";
-import type { BoardDetail } from "@/lib/api";
+import type { BoardPage } from "@/lib/types/board";
+import type { BoardDetail } from "@/lib/types/api";
 
 interface UseBoardPagesOptions {
   board: BoardDetail | undefined;

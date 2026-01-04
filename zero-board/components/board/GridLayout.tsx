@@ -2,7 +2,7 @@
 
 import { useMemo, useCallback } from "react";
 import GridLayout, { Layout } from "react-grid-layout";
-import { Widget } from "@/lib/api";
+import type { Widget } from "@/lib/types/api";
 
 interface GridLayoutProps {
   widgets: Widget[];

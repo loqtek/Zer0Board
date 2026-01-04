@@ -1,6 +1,6 @@
 "use client";
 
-import { Widget } from "@/lib/api";
+import type { Widget } from "@/lib/types/api";
 import { WidgetWrapper } from "./WidgetWrapper";
 import { Smartphone, AlertCircle, ExternalLink } from "lucide-react";
 

@@ -3,22 +3,8 @@
  */
 
 import { settingsApi } from "@/lib/api";
-
-export interface EmailMessage {
-  id: string;
-  from: string;
-  from_name: string;
-  subject: string;
-  preview: string;
-  date: string | null;
-  time: string;
-  unread: boolean;
-}
-
-export interface EmailData {
-  emails: EmailMessage[];
-  unread_count: number;
-}
+import type { EmailMessage, EmailData } from "@/lib/types/services/email";
+export type { EmailMessage, EmailData };
 
 /**
  * Fetch emails from an email integration

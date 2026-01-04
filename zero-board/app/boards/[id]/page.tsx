@@ -26,7 +26,7 @@ import { useBoardLockout } from "@/hooks/useBoardLockout";
 import { usePageRotation } from "@/hooks/usePageRotation";
 import { useState, useCallback, useEffect, useMemo } from "react";
 import type { Layout } from "react-grid-layout";
-import type { Widget } from "@/lib/api";
+import type { Widget } from "@/lib/types/api";
 import type { WidgetProps } from "@/lib/types/board";
 
 export default function BoardPage() {

@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import type { BoardDetail } from "@/lib/api";
-import type { BoardPage } from "@/components/board/PageTabs";
+import type { BoardDetail } from "@/lib/types/api";
+import type { BoardPage } from "@/lib/types/board";
 import type { EffectiveBoardSettings } from "@/lib/types/board";
 
 interface UseBoardSettingsOptions {

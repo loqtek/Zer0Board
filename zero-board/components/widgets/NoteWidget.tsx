@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Widget } from "@/lib/api";
+import type { Widget } from "@/lib/types/api";
 import { WidgetWrapper } from "./WidgetWrapper";
 import { useContainerSize } from "@/hooks/useContainerSize";
 import { useWidgetUpdate } from "@/hooks/useWidgetUpdate";

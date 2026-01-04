@@ -1,10 +1,11 @@
 "use client";
 
 import { useMemo, useState, useEffect, useRef } from "react";
-import { Widget } from "@/lib/api";
+import type { Widget } from "@/lib/types/api";
 import { WidgetWrapper } from "./WidgetWrapper";
-import { getEventsFromICal, getEventsFromGoogle, type CalendarEvent } from "@/lib/services/calendar";
+import { getEventsFromICal, getEventsFromGoogle } from "@/lib/services/calendar";
 import { settingsApi } from "@/lib/api";
+import type { CalendarEvent } from "@/lib/types/services/calendar";
 import { useQuery } from "@tanstack/react-query";
 
 interface CalendarWidgetProps {

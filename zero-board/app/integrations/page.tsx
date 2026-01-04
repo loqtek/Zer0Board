@@ -16,7 +16,8 @@ import {
   Image as ImageIcon, Zap, Video, Search as SearchIcon
 } from "lucide-react";
 import { boardsApi } from "@/lib/api";
-import { backgroundPresets, backgroundCategories, getYouTubeVideoId, getYouTubeThumbnail, type BackgroundPreset } from "@/lib/data/backgroundPresets";
+import { backgroundPresets, backgroundCategories, getYouTubeVideoId, getYouTubeThumbnail } from "@/lib/data/backgroundPresets";
+import type { BackgroundPreset } from "@/lib/types/data";
 import Image from "next/image";
 
 const categoryIcons: Record<string, React.ComponentType<{ className?: string }>> = {

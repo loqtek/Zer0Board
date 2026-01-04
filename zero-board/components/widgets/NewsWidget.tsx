@@ -1,11 +1,12 @@
 "use client";
 
 import { useMemo, useState, useEffect, useRef } from "react";
-import { Widget } from "@/lib/api";
+import type { Widget } from "@/lib/types/api";
 import { WidgetWrapper } from "./WidgetWrapper";
-import { getNewsHeadlines, type NewsArticle } from "@/lib/services/news";
+import { getNewsHeadlines } from "@/lib/services/news";
 import { useQuery } from "@tanstack/react-query";
 import { settingsApi } from "@/lib/api";
+import type { NewsArticle } from "@/lib/types/services/news";
 import { defaultRssFeeds } from "@/lib/data/defaultRssFeeds";
 
 type NewsDisplayStyle = "list" | "grid" | "carousel" | "ticker";

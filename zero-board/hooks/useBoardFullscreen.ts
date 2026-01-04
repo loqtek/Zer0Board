@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import type { BoardDetail } from "@/lib/api";
+import type { BoardDetail } from "@/lib/types/api";
 
 interface UseBoardFullscreenOptions {
   board: BoardDetail | undefined;

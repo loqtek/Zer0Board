@@ -4,24 +4,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { X, MoreVertical, Plus, GripVertical } from "lucide-react";
 import { toast } from "sonner";
-
-export interface BoardPage {
-  id: string;
-  name: string;
-  order: number;
-  settings?: {
-    background_type?: string;
-    background_source?: string;
-    background_config?: Record<string, any>;
-    background_preset?: string; // Preset ID from backgroundPresets
-    duration?: number; // seconds to show this page
-    use_global_settings?: boolean; // if true, use board-level settings
-    resolution_width?: number;
-    resolution_height?: number;
-    aspect_ratio?: string;
-    orientation?: string;
-  };
-}
+import type { BoardPage } from "@/lib/types/board";
+export type { BoardPage };
 
 interface PageTabsProps {
   pages: BoardPage[];

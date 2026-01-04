@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Widget } from "@/lib/api";
+import type { Widget } from "@/lib/types/api";
 import { WidgetWrapper } from "./WidgetWrapper";
 import { Mail, Inbox, AlertCircle } from "lucide-react";
-import { fetchEmails, type EmailMessage } from "@/lib/services/email";
+import { fetchEmails } from "@/lib/services/email";
 import { useQuery } from "@tanstack/react-query";
 import { settingsApi } from "@/lib/api";
+import type { EmailMessage } from "@/lib/types/services/email";
 
 interface EmailWidgetProps {
   widget: Widget;

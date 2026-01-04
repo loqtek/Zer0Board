@@ -3,7 +3,7 @@
 import { ReactNode, memo, useMemo, useEffect, CSSProperties, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Widget } from "@/lib/api";
+import type { Widget } from "@/lib/types/api";
 import { X, Settings2 } from "lucide-react";
 
 interface WidgetWrapperProps {

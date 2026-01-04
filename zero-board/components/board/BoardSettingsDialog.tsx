@@ -3,12 +3,14 @@
 import { useState, useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { boardsApi, boardAccessTokensApi, BoardSettings, type BoardAccessTokenCreateResponse } from "@/lib/api";
+import { boardsApi, boardAccessTokensApi } from "@/lib/api";
+import type { BoardSettings, BoardAccessTokenCreateResponse } from "@/lib/types/api";
 import { getErrorMessage } from "@/lib/utils/errors";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Info, Copy, Trash2, Plus, Eye, EyeOff } from "lucide-react";
-import { backgroundPresets, backgroundCategories, getYouTubeVideoId, getYouTubeThumbnail, type BackgroundPreset } from "@/lib/data/backgroundPresets";
+import { backgroundPresets, backgroundCategories, getYouTubeVideoId, getYouTubeThumbnail } from "@/lib/data/backgroundPresets";
+import type { BackgroundPreset } from "@/lib/types/data";
 import Image from "next/image";
 
 interface BoardSettingsDialogProps {

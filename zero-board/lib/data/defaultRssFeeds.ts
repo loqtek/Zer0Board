@@ -3,15 +3,8 @@
  * Based on major feeds from awesome-rss-feeds and other popular sources
  */
 
-export interface RssFeed {
-  id: string;
-  name: string;
-  url: string;
-  language: string;
-  region: string;
-  category: string;
-  description?: string;
-}
+import type { RssFeed } from "@/lib/types/data";
+export type { RssFeed };
 
 export const defaultRssFeeds: RssFeed[] = [
   // United States - General News

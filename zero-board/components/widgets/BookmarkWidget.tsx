@@ -1,6 +1,6 @@
 "use client";
 
-import { Widget } from "@/lib/api";
+import type { Widget } from "@/lib/types/api";
 import { WidgetWrapper } from "./WidgetWrapper";
 import { BookmarkGroup } from "./bookmark/BookmarkGroup";
 

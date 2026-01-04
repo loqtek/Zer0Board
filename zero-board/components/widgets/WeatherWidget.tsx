@@ -1,9 +1,10 @@
 "use client";
 
 import { useMemo, useState, useEffect } from "react";
-import { Widget } from "@/lib/api";
+import type { Widget } from "@/lib/types/api";
 import { WidgetWrapper } from "./WidgetWrapper";
-import { getWeather, type WeatherData } from "@/lib/services/weather";
+import { getWeather } from "@/lib/services/weather";
+import type { WeatherData } from "@/lib/types/services/weather";
 
 interface WeatherWidgetProps {
   widget: Widget;

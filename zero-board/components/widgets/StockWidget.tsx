@@ -3,7 +3,7 @@
 // Legacy stock widget - now redirects to StockMarketWidget
 // Keeping for backward compatibility
 import { StockMarketWidget } from "./StockMarketWidget";
-import type { Widget } from "@/lib/api";
+import type { Widget } from "@/lib/types/api";
 
 interface StockWidgetProps {
   widget: Widget;

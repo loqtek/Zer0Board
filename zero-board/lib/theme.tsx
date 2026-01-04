@@ -1,8 +1,8 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-
-export type Theme = "light" | "dark" | "dark-red";
+import type { Theme } from "@/lib/types/theme";
+export type { Theme };
 
 interface ThemeContextType {
   theme: Theme;

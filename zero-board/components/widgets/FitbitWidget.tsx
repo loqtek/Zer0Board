@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Widget } from "@/lib/api";
+import type { Widget } from "@/lib/types/api";
 import { WidgetWrapper } from "./WidgetWrapper";
 import { Activity, Footprints, Flame, Heart, Clock, TrendingUp, AlertCircle } from "lucide-react";
-import { getFitbitStats, type FitbitStats } from "@/lib/services/fitbit";
+import { getFitbitStats } from "@/lib/services/fitbit";
 import { useQuery } from "@tanstack/react-query";
 import { settingsApi } from "@/lib/api";
+import type { FitbitStats } from "@/lib/types/services/fitbit";
 
 interface FitbitWidgetProps {
   widget: Widget;

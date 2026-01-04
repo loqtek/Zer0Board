@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useEffect, useMemo, useRef } from "react";
-import { Widget } from "@/lib/api";
+import type { Widget } from "@/lib/types/api";
 import { WidgetWrapper } from "./WidgetWrapper";
 import { TrendingUp, BarChart3, Activity, AreaChart, AlertCircle } from "lucide-react";
-import { fetchApiData, type ApiDataPoint } from "@/lib/services/api-data";
+import { fetchApiData } from "@/lib/services/api-data";
+import type { ApiDataPoint } from "@/lib/types/services/api-data";
 
 interface GraphWidgetProps {
   widget: Widget;

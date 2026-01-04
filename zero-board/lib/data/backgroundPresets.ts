@@ -3,19 +3,8 @@
  * Common YouTube videos/streams for ambient backgrounds
  */
 
-export interface BackgroundPreset {
-  id: string;
-  name: string;
-  description: string;
-  type: "youtube";
-  source: string; // YouTube video ID or URL
-  category: string;
-  thumbnail?: string;
-  config?: {
-    muted?: boolean;
-    volume?: number;
-  };
-}
+import type { BackgroundPreset } from "@/lib/types/data";
+export type { BackgroundPreset };
 
 export const backgroundPresets: BackgroundPreset[] = [
   // Fireplace & Cozy

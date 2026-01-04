@@ -6,13 +6,8 @@
  * For now, we'll use a fallback RSS feed approach
  */
 
-export interface NewsArticle {
-  title: string;
-  description?: string;
-  url?: string;
-  source?: string;
-  publishedAt?: string;
-}
+import type { NewsArticle } from "@/lib/types/services/news";
+export type { NewsArticle };
 
 /**
  * Get news headlines from NewsAPI

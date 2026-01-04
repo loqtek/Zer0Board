@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Widget } from "@/lib/api";
+import type { Widget } from "@/lib/types/api";
 import { WidgetWrapper } from "./WidgetWrapper";
 import {
   TrendingUp,
@@ -17,10 +17,8 @@ import {
   getStockQuote,
   getStockOverview,
   getForexQuote,
-  type StockQuote,
-  type StockOverview,
-  type ForexQuote,
 } from "@/lib/services/stock-market";
+import type { StockQuote, StockOverview, ForexQuote } from "@/lib/types/services/stock-market";
 
 interface StockMarketWidgetProps {
   widget: Widget;

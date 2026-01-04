@@ -4,42 +4,8 @@
  * Get free API key at: https://www.alphavantage.co/support/#api-key
  */
 
-export interface StockQuote {
-  symbol: string;
-  price: number;
-  change: number;
-  changePercent: number;
-  volume: number;
-  high: number;
-  low: number;
-  open: number;
-  previousClose: number;
-  timestamp: string;
-}
-
-export interface StockOverview {
-  symbol: string;
-  name: string;
-  description: string;
-  sector: string;
-  industry: string;
-  marketCap: string;
-  peRatio: string;
-  dividendYield: string;
-  eps: string;
-  beta: string;
-  "52WeekHigh": string;
-  "52WeekLow": string;
-}
-
-export interface ForexQuote {
-  fromCurrency: string;
-  toCurrency: string;
-  rate: number;
-  change: number;
-  changePercent: number;
-  timestamp: string;
-}
+import type { StockQuote, StockOverview, ForexQuote } from "@/lib/types/services/stock-market";
+export type { StockQuote, StockOverview, ForexQuote };
 
 /**
  * Fetch real-time stock quote using Alpha Vantage

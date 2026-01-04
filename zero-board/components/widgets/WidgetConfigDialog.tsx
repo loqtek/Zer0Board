@@ -3,14 +3,17 @@
 import { useState, useEffect } from "react";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Widget, widgetsApi, settingsApi } from "@/lib/api";
+import type { Widget } from "@/lib/types/api";
+import { widgetsApi, settingsApi } from "@/lib/api";
 import { getErrorMessage } from "@/lib/utils/errors";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Autocomplete } from "@/components/ui/autocomplete";
-import { searchLocations, type LocationSuggestion } from "@/lib/services/weather";
-import { defaultRssFeeds, regions, categories, filterFeeds, type RssFeed } from "@/lib/data/defaultRssFeeds";
+import { searchLocations } from "@/lib/services/weather";
+import type { LocationSuggestion } from "@/lib/types/services/weather";
+import { defaultRssFeeds, regions, categories, filterFeeds } from "@/lib/data/defaultRssFeeds";
+import type { RssFeed } from "@/lib/types/data";
 
 interface WidgetConfigDialogProps {
   widget: Widget;

@@ -2,16 +2,8 @@
  * Service for fetching data from external APIs for graph/metric widgets
  */
 
-export interface ApiDataPoint {
-  x: string | number;
-  y: number;
-  label?: string;
-}
-
-export interface ApiDataResponse {
-  data: ApiDataPoint[];
-  error?: string;
-}
+import type { ApiDataPoint, ApiDataResponse } from "@/lib/types/services/api-data";
+export type { ApiDataPoint, ApiDataResponse };
 
 /**
  * Parse headers from string format (JSON or key:value pairs)

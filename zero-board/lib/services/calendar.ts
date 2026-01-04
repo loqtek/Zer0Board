@@ -3,15 +3,8 @@
  * Supports multiple sources: Google Calendar, Microsoft Calendar, iCal feeds
  */
 
-export interface CalendarEvent {
-  title: string;
-  date: string; // ISO date string
-  startTime?: string;
-  endTime?: string;
-  description?: string;
-  location?: string;
-  source?: string;
-}
+import type { CalendarEvent } from "@/lib/types/services/calendar";
+export type { CalendarEvent };
 
 /**
  * Parse iCal feed URL (public calendar feeds)

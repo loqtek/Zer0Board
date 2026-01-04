@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import type { BoardPage } from "@/components/board/PageTabs";
-import type { BoardDetail } from "@/lib/api";
+import type { BoardPage } from "@/lib/types/board";
+import type { BoardDetail } from "@/lib/types/api";
 
 interface UsePageRotationOptions {
   isEditMode: boolean;

@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Widget } from "@/lib/api";
+import type { Widget } from "@/lib/types/api";
 import { WidgetWrapper } from "./WidgetWrapper";
 import { Activity, MapPin, Clock, TrendingUp, Zap, Calendar, AlertCircle } from "lucide-react";
-import { getStravaStats, type StravaStats } from "@/lib/services/strava";
+import { getStravaStats } from "@/lib/services/strava";
 import { useQuery } from "@tanstack/react-query";
 import { settingsApi } from "@/lib/api";
+import type { StravaStats } from "@/lib/types/services/strava";
 
 interface StravaWidgetProps {
   widget: Widget;

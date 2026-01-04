@@ -3,8 +3,8 @@
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ThemeSwitcher } from "@/components/common/ThemeSwitcher";
-import type { BoardDetail } from "@/lib/api";
-import type { Theme } from "@/lib/theme";
+import type { BoardDetail } from "@/lib/types/api";
+import type { Theme } from "@/lib/types/theme";
 
 interface BoardHeaderProps {
   board: BoardDetail;

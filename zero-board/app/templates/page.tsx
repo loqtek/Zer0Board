@@ -14,7 +14,8 @@ import {
   Layout, Download, Settings2, 
   Loader2, Eye, Search
 } from "lucide-react";
-import { loadBoardTemplates, type BoardTemplate } from "@/lib/services/templates";
+import { loadBoardTemplates } from "@/lib/services/templates";
+import type { BoardTemplate } from "@/lib/types/services/templates";
 import Image from "next/image";
 
 export default function TemplatesPage() {
