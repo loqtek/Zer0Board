@@ -69,6 +69,11 @@ export interface ChangePasswordRequest {
   new_password: string;
 }
 
+export interface UpdateUserRequest {
+  username?: string;
+  email?: string;
+}
+
 export interface Integration {
   id: number;
   user_id: number;

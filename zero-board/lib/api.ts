@@ -110,6 +110,7 @@ import type {
   LoginRequest,
   LoginResponse,
   ChangePasswordRequest,
+  UpdateUserRequest,
   Integration,
   WidgetTemplate,
   BoardAccessToken,
@@ -128,6 +129,7 @@ export type {
   LoginRequest,
   LoginResponse,
   ChangePasswordRequest,
+  UpdateUserRequest,
   Integration,
   WidgetTemplate,
   BoardAccessToken,
@@ -154,6 +156,11 @@ export const authApi = {
 
   changePassword: async (data: ChangePasswordRequest): Promise<void> => {
     await api.post("/api/auth/change-password", data);
+  },
+
+  updateProfile: async (data: UpdateUserRequest): Promise<User> => {
+    const response = await api.put<User>("/api/auth/me", data);
+    return response.data;
   },
 };
 

@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ThemeSwitcher } from "@/components/common/ThemeSwitcher";
 import { useState, useRef, useEffect } from "react";
-import { Download, Upload } from "lucide-react";
+import { Download, Upload, User } from "lucide-react";
 
 export default function DashboardPage() {
   // All hooks must be declared at the top, before any conditional returns
@@ -263,7 +263,18 @@ export default function DashboardPage() {
             <Button variant="ghost" onClick={() => router.push("/templates")}>
               Templates
             </Button>
-            <span className="text-sm text-[var(--text-muted)]">{user?.username}</span>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-[var(--text-muted)]">{user?.username}</span>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => router.push("/profile")}
+                title="Profile Settings"
+                className="h-8 w-8 p-0"
+              >
+                <User className="h-4 w-4" />
+              </Button>
+            </div>
             <Button variant="outline" onClick={() => logout()}>
               Logout
             </Button>

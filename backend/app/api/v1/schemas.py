@@ -59,6 +59,13 @@ class ChangePasswordResponse(BaseModel):
     message: str = "Password changed successfully"
 
 
+class UpdateUserRequest(BaseModel):
+    """Schema for updating user profile."""
+
+    username: Optional[str] = None
+    email: Optional[EmailStr] = None
+
+
 # Board Schemas
 class BoardBase(BaseModel):
     """Base board schema."""
