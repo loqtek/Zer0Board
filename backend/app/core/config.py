@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     # Server
     host: str = "0.0.0.0"
     port: int = 8000
-    cors_origins: str = "http://localhost:3000,http://localhost:3001"
+    cors_origins: str = ""
 
     # Session
     session_cookie_name: str = "zero_board_session"
@@ -38,7 +38,7 @@ class Settings(BaseSettings):
     log_dir: str = "./logs"
 
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file="../.env",
         env_file_encoding="utf-8",
         case_sensitive=False,
         extra="ignore",

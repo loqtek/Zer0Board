@@ -18,6 +18,7 @@ from app.api.v1.schemas import (
     UserResponse,
     ChangePasswordRequest,
     ChangePasswordResponse,
+    UpdateUserRequest,
     ErrorResponse,
 )
 from app.api.v1.dependencies import (
@@ -204,4 +205,48 @@ async def change_password(
 
     logger.info(f"Password changed successfully for user '{current_user.username}' (ID: {current_user.id})")
     return ChangePasswordResponse(message="Password changed successfully")
+
+
+@router.put(
+    "/me",
+    response_model=UserResponse,
+    status_code=status.HTTP_200_OK,
+    responses={
+        400: {"model": ErrorResponse},
+        401: {"model": ErrorResponse},
+    },
+)
+async def update_profile(
+    request: UpdateUserRequest,
+    session: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Update profile information for authenticated user."""
+    logger.info(f"Profile update attempt for user '{current_user.username}' (ID: {current_user.id})")
+    
+    # Check if username is being changed and if it's already taken
+    if request.username and request.username != current_user.username:
+        result = await session.execute(
+            select(User).where(User.username == request.username)
+        )
+        existing_user = result.scalar_one_or_none()
+        if existing_user:
+            logger.warning(f"Profile update failed: Username '{request.username}' already taken")
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Username is already taken",
+            )
+        current_user.username = request.username
+        logger.info(f"Username updated to '{request.username}' for user ID: {current_user.id}")
+    
+    # Update email if provided
+    if request.email is not None:
+        current_user.email = request.email
+        logger.info(f"Email updated for user '{current_user.username}' (ID: {current_user.id})")
+    
+    await session.commit()
+    await session.refresh(current_user)
+    
+    logger.info(f"Profile updated successfully for user '{current_user.username}' (ID: {current_user.id})")
+    return UserResponse.model_validate(current_user)
 

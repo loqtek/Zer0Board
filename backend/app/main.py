@@ -35,13 +35,12 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 # Add logging middleware (before CORS to log all requests)
 app.add_middleware(LoggingMiddleware)
-
 # CORS configuration
 if settings.cors_origins:
     origins = [origin.strip() for origin in settings.cors_origins.split(",")]
 else:
-    # Default to allowing localhost in development
-    origins = ["http://localhost:3000", "http://localhost:8000"] if settings.is_development else []
+    # throw error if cors origins are not set
+    raise ValueError("CORS origins are not set")
 
 logger.debug(f"CORS origins: {origins}")
 

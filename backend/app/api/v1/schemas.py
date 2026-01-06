@@ -2,7 +2,7 @@
 
 from datetime import datetime
 from typing import Optional
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, field_validator
 
 
 # User Schemas
@@ -11,6 +11,14 @@ class UserBase(BaseModel):
 
     username: str
     email: Optional[EmailStr] = None
+
+    @field_validator("email", mode="before")
+    @classmethod
+    def validate_email(cls, v):
+        """Convert empty string to None for optional email field."""
+        if v == "" or v is None:
+            return None
+        return v
 
 
 class UserCreate(UserBase):
@@ -57,6 +65,21 @@ class ChangePasswordResponse(BaseModel):
     """Schema for change password response."""
 
     message: str = "Password changed successfully"
+
+
+class UpdateUserRequest(BaseModel):
+    """Schema for updating user profile."""
+
+    username: Optional[str] = None
+    email: Optional[EmailStr] = None
+
+    @field_validator("email", mode="before")
+    @classmethod
+    def validate_email(cls, v):
+        """Convert empty string to None for optional email field."""
+        if v == "" or v is None:
+            return None
+        return v
 
 
 # Board Schemas

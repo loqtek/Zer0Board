@@ -143,15 +143,6 @@ export const backgroundPresets: BackgroundPreset[] = [
     config: { muted: false, volume: 20 },
   },
   {
-    id: "city-1",
-    name: "Sydney Cityscape",
-    description: "Live Sydney Cityscape",
-    type: "youtube",
-    source: "5uZa3-RMFos", 
-    category: "Urban",
-    config: { muted: false, volume: 20 },
-  },
-  {
     id: "iss-live-1",
     name: "International Space Station Live",
     description: "Live view of the International Space Station & Earth",
