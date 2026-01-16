@@ -11,6 +11,7 @@ import { getErrorMessage } from "@/lib/utils/errors";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ThemeSwitcher } from "@/components/common/ThemeSwitcher";
+import { UpdateNotification } from "@/components/common/UpdateNotification";
 import { useState, useRef, useEffect } from "react";
 import { Download, Upload, User } from "lucide-react";
 
@@ -256,6 +257,7 @@ export default function DashboardPage() {
         <div className="container mx-auto flex items-center justify-between px-4 py-4">
           <h1 className="text-2xl font-bold text-[var(--foreground)]">Zero Board</h1>
           <div className="flex items-center gap-4">
+            <UpdateNotification />
             <ThemeSwitcher theme={theme} setTheme={setTheme} />
             <Button variant="ghost" onClick={() => router.push("/integrations")}>
               Integrations
